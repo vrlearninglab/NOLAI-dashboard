@@ -15,6 +15,5 @@ class VerifyCsrfToken extends Middleware
         '/send-to-unity',
         '/get-message',
         '/store-data',
-        '/webrtc-signaling',
     ];
 }

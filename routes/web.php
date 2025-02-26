@@ -38,18 +38,3 @@ Route::post('/store-data', [PlaceholderController::class, 'storeData']);
 Route::get('/laravel', function () {
     return view('welcome');
 });
-
-Route::post('/webrtc-signaling', function (Request $request) {
-    $offer = $request->input('sdp');
-    
-    // Log het ontvangen offer voor debugging
-    Log::debug('Ontvangen SDP van Unity: ', ['sdp' => $offer]);
-
-    // Base64 encode de SDP om te zorgen dat er geen escape-tekens problemen zijn
-    $encodedSdp = base64_encode($offer);
-
-    return response()->json([
-        'type' => 'answer',
-        'sdp' => $encodedSdp  // Zend de gecodeerde SDP terug
-    ]);
-});
