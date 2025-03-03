@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\PlaceholderController;
+use App\Http\Controllers\ImageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,11 @@ Route::get('/get-message', function () {
 });
 
 Route::post('/store-data', [PlaceholderController::class, 'storeData']);
+Route::post('/store-image', [ImageController::class, 'store']);
+
+Route::get('/recording', [ImageController::class, 'showRecording']);
+Route::get('/get-images', [ImageController::class, 'getImages']);
+
 
 Route::get('/laravel', function () {
     return view('welcome');
