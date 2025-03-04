@@ -12,7 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('images', function (Blueprint $table) {
-            $table->id();
+            $table->unsignedBigInteger('session_id')->nullable();
+            $table->foreign('session_id')->references('id')->on('sessions')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
             $table->string('path');
             $table->timestamps();
         });

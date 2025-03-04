@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('placeholder', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
             $table->string('dummy_data');
+            $table->timestamps();
         });
     }
 
