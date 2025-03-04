@@ -16,5 +16,6 @@ class VerifyCsrfToken extends Middleware
         '/get-message',
         '/store-data',
         '/store-image',
+        '/upload-audio',
     ];
 }

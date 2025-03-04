@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\PlaceholderController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\AudioController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +43,7 @@ Route::post('/store-image', [ImageController::class, 'store']);
 Route::get('/recording', [ImageController::class, 'showRecording']);
 Route::get('/get-images', [ImageController::class, 'getImages']);
 
+Route::post('/upload-audio', [AudioController::class, 'uploadAudio']);
 
 Route::get('/laravel', function () {
     return view('welcome');

@@ -14,6 +14,7 @@ return [
     */
 
     'default' => env('FILESYSTEM_DISK', 'local'),
+    'max_size' => env('UPLOAD_MAX_SIZE', 2000),
 
     /*
     |--------------------------------------------------------------------------
