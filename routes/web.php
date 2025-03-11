@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\PlaceholderController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\AudioController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\StudentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,11 +21,18 @@ use App\Http\Controllers\AudioController;
 */
 
 Route::get('/', function () {
-    return view('home');
+    return view('start');
 });
 
-Route::get('/session', function () {
-    return view('session');
+Route::post('/store-name', [UserController::class, 'store'])->name('store.name');
+Route::get('/home/{name}', [UserController::class, 'home'])->name('home');
+
+Route::get('/start-sessie', [StudentController::class, 'showStudents'])->name('start.sessie');
+Route::post('/start-sessie', [StudentController::class, 'startSession']);
+
+
+Route::get('/sessie', function () {
+    return view('sessie');
 });
 
 Route::post('/send-to-unity', function (Illuminate\Http\Request $request) {
