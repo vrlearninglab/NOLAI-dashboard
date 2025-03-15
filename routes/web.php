@@ -8,6 +8,7 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\AudioController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\ProcessController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,8 +29,8 @@ Route::post('/store-name', [UserController::class, 'store'])->name('store.name')
 Route::get('/home/{name}', [UserController::class, 'home'])->name('home');
 
 Route::get('/start-sessie', [StudentController::class, 'showStudents'])->name('start.sessie');
-Route::post('/start-sessie', [StudentController::class, 'startSession']);
-
+Route::post('/start-sessie', [ProcessController::class, 'newSession']);
+// Route::post('/start-sessie', [ProcessController::class, 'handle'])->name('process.handle');
 
 Route::get('/sessie', function () {
     return view('sessie');

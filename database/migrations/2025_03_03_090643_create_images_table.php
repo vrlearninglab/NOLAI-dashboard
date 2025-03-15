@@ -12,12 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('images', function (Blueprint $table) {
-            $table->unsignedBigInteger('session_id')->nullable();
-            $table->foreign('session_id')->references('id')->on('sessions')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
-
             $table->string('path');
+            $table->foreignId('session_id')->constrained('sessions')->onDelete('cascade');
+            
             $table->timestamps();
         });
     }

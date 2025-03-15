@@ -23,7 +23,9 @@ class UserController extends Controller
                 'name' => $request->name,
             ]);
         }
-
+        
+        session(['username' => $user->name]);
+        
         // Stuur de gebruiker door naar de homepagina met de naam in de route
         return redirect()->route('home', ['name' => $user->name]);
     }

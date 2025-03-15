@@ -6,7 +6,7 @@
     <title>Homepagina</title>
 </head>
 <body>
-    <h1>Welkom, {{ $name }}.</h1>
+    <h1>Welkom, {{ session('username') }}!</h1>
     <form action="{{ route('start.sessie') }}">
         <button type="submit">Nieuwe sessie</button>
     </form>

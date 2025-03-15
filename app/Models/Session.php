@@ -5,8 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Image extends Model
+class Session extends Model
 {
     use HasFactory;
-    protected $fillable = ['path', 'session_id'];
+
+    protected $fillable = ['student_id', 'user_id'];
 }
