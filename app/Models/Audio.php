@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Audio extends Model
 {
     protected $table = 'audios';
-    protected $fillable = ['file_path'];
+    protected $fillable = ['file_path', 'audio_type', 'session_id'];
 }
 
