@@ -42,8 +42,8 @@ Route::get('/sessie', function () {
 
 Route::get('/sessie-analyse/{id}', [SessionController::class, 'show'])->name('sessie-analyse');
 
-Route::get('/notes', [NoteController::class, 'index'])->name('notes.index');
-Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');
+Route::get('/notes/{sessionId?}', [NoteController::class, 'index'])->name('notes.index');
+Route::post('/notes/{sessionId?}', [NoteController::class, 'store'])->name('notes.store');
 
 Route::post('/send-to-unity', function (Illuminate\Http\Request $request) {
     $message = $request->input('message', '');

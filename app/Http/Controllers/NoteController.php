@@ -9,14 +9,21 @@ use App\Models\Session;
 
 class NoteController extends Controller
 {
-    public function index()
+    public function index($sessionId = null)
     {
-        $latestSession = Session::latest()->first();
-        if (!$latestSession) {
-            return response()->json(['error' => 'Geen actieve sessie gevonden.'], 404);
+        // Gebruik de opgegeven sessie-ID of pak de laatst aangemaakte sessie
+        if ($sessionId) {
+            $session = Session::find($sessionId);
+        } else {
+            $session = Session::latest()->first();
         }
 
-        $notes = Note::where('session_id', $latestSession->id)
+        if (!$session) {
+            return response()->json(['error' => 'Geen sessie gevonden.'], 404);
+        }
+
+        // Haal de notities op voor de juiste sessie
+        $notes = Note::where('session_id', $session->id)
                     ->oldest()
                     ->get()
                     ->map(function ($note) {
@@ -29,11 +36,17 @@ class NoteController extends Controller
         return response()->json($notes);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, $sessionId = null)
     {
-        $latestSession = Session::latest()->first();
-        if (!$latestSession) {
-            return response()->json(['error' => 'Geen actieve sessie gevonden.'], 404);
+        // Gebruik de opgegeven sessie-ID of pak de laatst aangemaakte sessie
+        if ($sessionId) {
+            $session = Session::find($sessionId);
+        } else {
+            $session = Session::latest()->first();
+        }
+
+        if (!$session) {
+            return response()->json(['error' => 'Geen sessie gevonden.'], 404);
         }
 
         $request->validate([
@@ -42,7 +55,7 @@ class NoteController extends Controller
 
         $note = Note::create([
             'message' => $request->message,
-            'session_id' => $latestSession->id,
+            'session_id' => $session->id,
         ]);
 
         return response()->json($note, 201);

@@ -1,7 +1,11 @@
 document.addEventListener("DOMContentLoaded", fetchNotes);
 
 function fetchNotes() {
-    axios.get("/notes")
+    let sessionId = window.sessionId || null; // Haal de sessie-ID op uit de globale variabele
+
+    let url = sessionId ? `/notes/${sessionId}` : "/notes"; // Dynamische URL
+
+    axios.get(url)
         .then(response => {
             let notesList = document.getElementById("notesList");
             notesList.innerHTML = ""; // Reset lijst
@@ -20,7 +24,10 @@ function addNote() {
     let message = noteInput.value.trim();
     if (!message) return;
 
-    axios.post("/notes", { message })
+    let sessionId = window.sessionId || null; // Sessie-ID ophalen
+    let url = sessionId ? `/notes/${sessionId}` : "/notes"; // Dynamische URL
+
+    axios.post(url, { message })
         .then(response => {
             noteInput.value = ""; // Leeg inputveld
             fetchNotes(); // Lijst vernieuwen
