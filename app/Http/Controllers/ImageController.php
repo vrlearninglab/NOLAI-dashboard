@@ -39,9 +39,15 @@ class ImageController extends Controller
         return view('recording');
     }
 
-    public function getImages()
+    // Haal de afbeeldingen op die gelinkt zijn aan een specifieke sessie
+    public function getImages($sessionId)
     {
-        $images = \App\Models\Image::orderBy('created_at')->pluck('path');
+        // Haal de afbeeldingen van de specifieke sessie op
+        $images = Image::where('session_id', $sessionId)
+                       ->orderBy('created_at')
+                       ->pluck('path');
+
+        // Return de lijst van afbeeldingen
         return response()->json($images);
     }
 }

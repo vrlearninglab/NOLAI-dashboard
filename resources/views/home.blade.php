@@ -10,5 +10,8 @@
     <form action="{{ route('start.sessie') }}">
         <button type="submit">Nieuwe sessie</button>
     </form>
+    <form action="{{ route('sessions.index') }}">
+        <button type="submit">Sessie analyseren</button>
+    </form>
 </body>
 </html>

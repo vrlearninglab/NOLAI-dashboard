@@ -3,9 +3,12 @@ document.addEventListener('DOMContentLoaded', function () {
     let index = 0;
     let playbackInterval;
 
+    // De sessie-ID wordt van de blade naar JS doorgegeven
+    let sessionId = window.sessionId;
+
     async function fetchImages() {
         try {
-            const response = await fetch('/get-images');
+            const response = await fetch(`/get-images/${sessionId}`);
             images = await response.json();
         } catch (error) {
             console.error('Fout bij het ophalen van de afbeeldingen:', error);

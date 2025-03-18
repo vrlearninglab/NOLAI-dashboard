@@ -14,4 +14,9 @@ class Student extends Model
 
     // Geef de velden aan die massaal ingevuld mogen worden
     protected $fillable = ['student_nummer'];
+
+    public function sessions()
+    {
+        return $this->hasMany(Session::class);
+    }
 }
