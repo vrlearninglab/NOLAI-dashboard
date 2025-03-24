@@ -4,9 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Selecteer Sessie</title>
+    <link href="{{ asset('css/style.css') }}" rel='stylesheet' type='text/css' />
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
+    <header>
+        <a href="{{ url('/') }}" class="return-button">
+            <img src="{{ asset('img/icon_return.png') }}" alt="Terug" width="40" height="40">
+            <span>Terug</span>
+        </a>
+        <h1>VR-woordenschat dashboard</h1>
+    </header>
     <h1>Selecteer een sessie</h1>
 
     <!-- Filter opties met checkboxes -->
