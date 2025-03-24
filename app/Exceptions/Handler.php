@@ -27,4 +27,15 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    public function render($request, Throwable $exception)
+    {
+        \Log::error('HTTP FOUT:', [
+            'url' => $request->fullUrl(),
+            'methode' => $request->method(),
+            'fout' => $exception->getMessage(),
+        ]);
+
+        return parent::render($request, $exception);
+    }
 }

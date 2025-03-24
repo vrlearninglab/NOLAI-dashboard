@@ -11,6 +11,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ProcessController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\SessionController;
+use App\Http\Controllers\StreamController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,9 +37,7 @@ Route::post('/start-sessie', [ProcessController::class, 'newSession']);
 Route::get('/select-session', [SessionController::class, 'index'])->name('sessions.index');
 Route::get('/api/sessions', [SessionController::class, 'getSessions'])->name('sessions.list');
 
-Route::get('/sessie', function () {
-    return view('sessie');
-});
+Route::get('/sessie', [StreamController::class, 'getStream'])->name('sessie');
 
 Route::get('/sessie-analyse/{id}', [SessionController::class, 'show'])->name('sessie-analyse');
 
@@ -58,11 +57,15 @@ Route::get('/get-message', function () {
 
 Route::post('/store-data', [PlaceholderController::class, 'storeData']);
 Route::post('/store-image', [ImageController::class, 'store']);
+Route::post('/store-image-batch', [ImageController::class, 'storeBatch']);
 
 Route::get('/recording', [ImageController::class, 'showRecording']);
 Route::get('/get-images/{sessionId}', [ImageController::class, 'getImages']);
 
 Route::post('/upload-audio', [AudioController::class, 'uploadAudio']);
+
+Route::post('/update-stream', [StreamController::class, 'updateStream']);
+
 
 Route::get('/laravel', function () {
     return view('welcome');

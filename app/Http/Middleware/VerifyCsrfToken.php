@@ -17,5 +17,7 @@ class VerifyCsrfToken extends Middleware
         '/store-data',
         '/store-image',
         '/upload-audio',
+        '/store-image-batch',
+        '/update-stream',
     ];
 }

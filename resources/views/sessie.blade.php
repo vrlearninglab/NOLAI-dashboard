@@ -15,7 +15,11 @@
 
     <button onclick="sendToUnity('Start stream')">Start stream</button>
     <button onclick="sendToUnity('Stop stream')">Stop stream</button>
-    <img src="http://192.168.2.7:5000/stream/" alt="Stream currently not running, reload the page to try again." style="width: 100%; max-width: 800px; border: 2px solid black;">
+    @if ($streamURL)
+        <img src="{{ $streamURL }}" alt="Stream niet gestart, of reload de pagina" style="width: 100%; max-width: 800px; border: 2px solid black;">
+    @else
+        <p>Geen stream url gevonden.</p>
+    @endif
 </body>
 
 <div>

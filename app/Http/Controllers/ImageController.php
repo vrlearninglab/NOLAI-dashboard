@@ -50,4 +50,35 @@ class ImageController extends Controller
         // Return de lijst van afbeeldingen
         return response()->json($images);
     }
+
+    public function storeBatch(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|array|min:1',
+            'image.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        // Haal de laatst aangemaakte sessie op (op basis van de timestamp)
+        $latestSession = Session::latest()->first();
+
+        if (!$latestSession) {
+            return response()->json(['error' => 'Geen actieve sessie gevonden.'], 404);
+        }
+
+        $savedImages = [];
+        foreach ($request->file('image') as $imageFile) {
+            // Sla elke afbeelding op in de public/images map
+            $path = $imageFile->store('images', 'public');
+
+            // Maak de afbeelding aan met de gekoppelde sessie
+            $image = Image::create([
+                'path' => $path,
+                'session_id' => $latestSession->id, // Koppel de image aan de laatste sessie
+            ]);
+
+            $savedImages[] = $image;
+        }
+
+        return response()->json(['message' => 'Afbeeldingen opgeslagen!', 'images' => $savedImages]);
+    }
 }
