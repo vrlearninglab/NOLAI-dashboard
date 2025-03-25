@@ -22,7 +22,7 @@
         <form action="{{ route('start.sessie') }}" method="POST">
             @csrf
             <label for="student_number">Leerlingnummer:</label>
-            <input type="text" id="student_number" name="student_number" onkeyup="filterStudents()" required>
+            <input type="text" id="student_number" name="student_number" onkeyup="filterStudents()" placeholder="Filter en selecteer" required>
             <button type="submit">Start sessie</button>
         </form>
 

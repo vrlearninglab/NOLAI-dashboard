@@ -55,6 +55,12 @@ button:hover {
     background-color: #B06550; /* Donkerdere variant van accentkleur */
 }
 
+input {
+    border: 1px solid var(--accent);
+    background-color: var(--primary);
+    color: var(--text-light);
+}
+
 header {
     width: 100%;
     background-color: var(--secondary);
@@ -158,9 +164,9 @@ footer {
 
 /* User select styling */
 .user-input {
-    background-color: var(--secondary);
     padding: 30px;
     border-radius: 12px;
+    background-color: var(--secondary);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     text-align: center;
     width: 90%;
@@ -199,7 +205,6 @@ footer {
 
 .user-input input:focus {
     outline: none;
-    border-color: var(--text-light);
 }
 
 .user-input button {
@@ -317,11 +322,8 @@ footer {
 
 .select-student input {
     padding: 10px;
-    border: 2px solid var(--accent);
     border-radius: 5px;
     font-size: 18px;
-    background-color: var(--text-light);
-    color: var(--text-dark);
     text-align: center;
     width: 100%; /* Zorgt ervoor dat het invoerveld netjes in de sectie past */
     box-sizing: border-box; /* Voorkomt extra breedte door padding */
@@ -329,7 +331,6 @@ footer {
 
 .select-student input:focus {
     outline: none;
-    border-color: var(--text-light);
 }
 
 .select-student button {
@@ -345,7 +346,7 @@ footer {
 
 .select-student button:hover {
     background-color: #B06550;
-    transform: scale(1.05);
+    /* transform: scale(1.05); */
 }
 
 /* Extra ruimte tussen de titel en de lijst */
@@ -384,7 +385,7 @@ footer {
 
 .student-item:hover {
     background-color: var(--accent);
-    transform: scale(1.05);
+    /* transform: scale(1.05); */
 }
 
 /* Scrollbar aanpassen */
@@ -429,11 +430,8 @@ footer {
 
 .select-student input {
     padding: 10px;
-    border: 2px solid var(--accent);
     border-radius: 5px;
     font-size: 18px;
-    background-color: var(--text-light);
-    color: var(--text-dark);
     text-align: center;
     width: 100%; /* Zorgt ervoor dat het invoerveld netjes in de sectie past */
     box-sizing: border-box;
@@ -441,7 +439,6 @@ footer {
 
 .select-student input:focus {
     outline: none;
-    border-color: var(--text-light);
 }
 
 .select-student button {
@@ -550,8 +547,10 @@ footer {
     justify-content: flex-start;
     align-items: stretch;
     gap: 20px;
-    width: 100%;
-    margin-top: 120px; /* Ruimte boven de sectie om overlap te voorkomen */
+    max-height: 90%;
+    min-height: 70%;
+    width: 95%;
+    margin-top: 5%; /* Ruimte boven de sectie om overlap te voorkomen */
     padding-top: 20px; /* Extra ruimte voor nettere opmaak */
     position: relative;
     z-index: 10;
@@ -560,7 +559,8 @@ footer {
 /* Sessie-buttons sectie */
 .sessie-buttons {
     flex: 1 1 30%; /* Flex-grow: 1 betekent dat het kan groeien en 30% van de breedte neemt */
-    min-height: 400px; /* Minimaal hoogte voor buttons-sectie */
+    min-height: 90%; /* Minimaal hoogte voor buttons-sectie */
+    max-height: 90%;
     overflow-y: auto;
     background-color: var(--secondary);
     padding: 15px;
@@ -614,7 +614,8 @@ footer {
 /* Livestream sectie */
 .livestream {
     flex: 2 1 50%; /* Livestream is groter, 50% van de breedte */
-    min-height: 600px; /* Minimaal hoogte voor livestream sectie */
+    min-height: 90%;
+    max-height: 90%;
     background-color: var(--secondary);
     padding: 20px;
     border-radius: 12px;
@@ -625,55 +626,136 @@ footer {
     justify-content: space-between;
 }
 
-/* Sessie-notes sectie */
-.sessie-notes {
-    flex: 1 1 20%; /* Notes-sectie neemt de resterende ruimte */
-    min-height: 600px; /* Minimaal hoogte voor notes-sectie */
+.sessie-filter-form {
+    background: var(--secondary);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.sessie-filter {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+label {
+    cursor: pointer;
+}
+
+input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+#searchInput {
+    width: 95%;
+    padding: 10px;
+    border: 1px solid var(--accent);
+    border-radius: 5px;
+    background-color: var(--primary);
+    color: var(--text-light);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--secondary);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+thead {
+    background: var(--accent);
+    color: var(--text-dark);
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    font-weight: bold;
+}
+
+tbody tr {
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+tbody tr:hover {
+    background: var(--accent);
+    color: var(--text-dark);
+}
+
+.table-container {
     overflow-y: auto;
-    background-color: var(--secondary);
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    min-height: 50%;
+    max-height: 50%;
+    min-width: 50%;
+    max-width: 50%;
+}
+
+.livestream img {
+    width: 80%; /* Zorgt ervoor dat de afbeelding niet de volledige breedte inneemt */
+    height: auto; /* Behoud de aspect ratio */
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.livestream #playbackImage {
+    width: 70%;
+}
+
+.livestream-content {
     display: flex;
     flex-direction: column;
+    align-items: center; /* Centreert de afbeelding en knop horizontaal */
+    gap: 15px; /* Zorgt voor ruimte tussen afbeelding en knop */
 }
+
+
 
 /* Sessie-notes sectie */
 .sessie-notes {
-    flex: 1 1 20%; /* Notes-sectie neemt de resterende ruimte */
-    min-height: 600px; /* Minimaal hoogte voor notes-sectie */
+    flex: 1 1 auto;
+    height: 67.2vh;
+    width: 20%;
     background-color: var(--secondary);
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
-    gap: 15px; /* Ruimte tussen de secties */
+    gap: 10px;
+    box-sizing: border-box;
 }
 
-/* Titel van de sessie-notes */
+/* Titel */
 .sessie-notes h1 {
     font-size: 24px;
     color: #fff;
-    margin-bottom: 10px;
     text-align: center;
+    margin: 0;
 }
 
-/* Lijst met notities */
 #notesList {
-    flex-grow: 1; /* Laat de lijst de beschikbare ruimte invullen */
-    list-style: none; /* Verwijdert de standaard opsommingstekens */
-    padding: 0;
+    flex-grow: 1;
+    list-style: none;
+    padding: 10px;
     margin: 0;
-    overflow-y: auto; /* Maak de lijst scrollbaar */
-    max-height: 400px; /* Max hoogte voor de lijst */
     background-color: #fff;
     border-radius: 8px;
-    padding: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-/* Elke notitie in de lijst */
 #notesList li {
     padding: 8px;
     background-color: #f9f9f9;
@@ -682,41 +764,34 @@ footer {
     color: #333;
     font-size: 16px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
-/* Hover-effect voor elke notitie */
-#notesList li:hover {
-    background-color: #e0e0e0;
+.sessie-input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
 }
 
-/* Inputveld voor notities */
 #noteInput {
     padding: 10px;
     font-size: 16px;
     border: none;
     border-radius: 8px;
-    margin-top: 10px;
-    background-color: #f0f0f0;
     width: 100%;
-    box-sizing: border-box; /* Zorgt ervoor dat padding niet de breedte beïnvloedt */
-    margin-bottom: 10px; /* Ruimte tussen input en knop */
+    box-sizing: border-box;
 }
 
-/* Button om notitie toe te voegen */
 .sessie-notes button {
-    padding: 10px 20px;
+    padding: 10px;
+    margin-top: 1vh;
     color: white;
     border: none;
     border-radius: 8px;
     font-size: 16px;
     cursor: pointer;
+    width: 100%;
     transition: background-color 0.3s, transform 0.2s ease-in-out;
-    width: 100%; /* Zorgt ervoor dat de knop de volledige breedte van het inputveld neemt */
-}
-
-/* Focus-effect voor de knop */
-.sessie-notes button:focus {
-    outline: none;
-    border: 2px solid #fff; /* Witte rand bij focus */
 }

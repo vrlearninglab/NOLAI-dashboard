@@ -50,7 +50,7 @@ class NoteController extends Controller
         }
 
         $request->validate([
-            'message' => 'required|string|max:255',
+            'message' => 'required|string',
         ]);
 
         $note = Note::create([

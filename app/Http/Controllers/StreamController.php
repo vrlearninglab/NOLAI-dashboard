@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\StreamSetting;
+use App\Models\Session; // Voeg de Session model toe om sessie-informatie op te halen
 
 class StreamController extends Controller
 {
@@ -34,6 +35,12 @@ class StreamController extends Controller
             ? "http://{$streamSetting->ip}:{$streamSetting->port}/stream/"
             : null;
 
-        return view('sessie', compact('streamURL'));
+        $session = Session::with(['user', 'student'])->latest()->first();
+
+        if (!$session) {
+            $session = null;
+        }
+
+        return view('sessie', compact('streamURL', 'session'));
     }
 }

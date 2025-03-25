@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", fetchNotes);
+document.addEventListener("DOMContentLoaded", fetchNotes);zz
 
 function fetchNotes() {
     let sessionId = window.sessionId || null; // Haal de sessie-ID op uit de globale variabele
@@ -10,14 +10,19 @@ function fetchNotes() {
             let notesList = document.getElementById("notesList");
             notesList.innerHTML = ""; // Reset lijst
 
+            // Voeg alle notities toe aan de lijst
             response.data.forEach(note => {
                 let li = document.createElement("li");
                 li.textContent = `${note.created_at}: ${note.message}`; // Voeg timestamp toe
                 notesList.appendChild(li);
             });
+
+            // Scroll automatisch naar beneden na het laden van notities
+            notesList.scrollTop = notesList.scrollHeight;
         })
         .catch(error => console.error("Fout bij laden notities:", error));
 }
+
 
 function addNote() {
     let noteInput = document.getElementById("noteInput");

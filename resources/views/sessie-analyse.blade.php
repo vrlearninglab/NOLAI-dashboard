@@ -4,37 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sessie Analyse</title>
+    <link href="{{ asset('css/style.css') }}" rel='stylesheet' type='text/css' />
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="{{ asset('js/recording.js') }}" defer></script>
     <script src="{{ asset('js/notes.js') }}" defer></script>
 </head>
 <body>
-    <h1>Sessie Analyse</h1>
-    
-    <!-- Toon de sessie-informatie -->
-    <p><strong>Sessie ID:</strong> {{ $session->id }}</p>
-    <p><strong>Datum aangemaakt:</strong> {{ $session->created_at }}</p>
-    <p><strong>Naam Onderzoeker:</strong> {{ $session->user->name }}</p>
-    <p><strong>Studentnummer:</strong> {{ $session->student->student_nummer }}</p>
+    <header>
+        <a href="{{ url('/select-session') }}" class="return-button">
+            <img src="{{ asset('img/icon_return.png') }}" alt="Terug" width="40" height="40">
+            <span>Terug</span>
+        </a>
+        <h1>VR-woordenschat dashboard</h1>
+    </header>
 
-    <div>
-        <h1>Recording Playback</h1>
-        <button onclick="startPlayback()">Start Playback</button>
-        <img id="playbackImage" src="" alt="Playback" style="width: 100%; max-width: 800px; border: 2px solid black;">
-    </div>
+    <article class="sessie-info">
+        <h1>Sessie Analyse</h1>
+        
+        <section class="sessie-details">
+            <p>Sessie ID: {{ $session->id }}</p>
+            <p>Datum aangemaakt: {{ $session->created_at }}</p>
+            <p>Naam Onderzoeker: {{ $session->user->name }}</p>
+            <p>Studentnummer: {{ $session->student->student_nummer }}</p>
+        </section>
+    </article>
 
-    <div>
-        <h1>Notes</h1>
+    <article class="sessie-controls">
+        <section class="livestream">
+            <h2>Recording Playback</h2>
+            <div>
+                <img id="playbackImage" alt="Playback">
+            </div>
+            <button onclick="startPlayback()">Start Playback</button>
+        </section>
 
-        <input type="text" id="noteInput" placeholder="Typ een notitie...">
-        <button onclick="addNote()">Toevoegen</button>
+        <section class="sessie-notes">
+            <h1>Notes</h1>
+            <ul id="notesList">
+                <!-- Notities komen hier -->
+            </ul>
+            <div class="note-input-container">
+                <input type="text" id="noteInput" placeholder="Typ een notitie...">
+                <button onclick="addNote()">Toevoegen</button>
+            </div>
+        </section>
+    </article>
 
-        <ul id="notesList">
-            <!-- Notities worden hier geladen -->
-        </ul>
-    </div>
-
-    <a href="{{ route('sessions.index') }}">Terug naar sessies</a>
+    <footer>
+    </footer>
 
     <script>
         var sessionId = {{ $session->id }};
