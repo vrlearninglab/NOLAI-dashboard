@@ -66,6 +66,9 @@ Route::post('/upload-audio', [AudioController::class, 'uploadAudio']);
 
 Route::post('/update-stream', [StreamController::class, 'updateStream']);
 
+Route::post('/trigger-buttons', [App\Http\Controllers\TriggerButtonController::class, 'store'])->name('trigger-buttons.store'); //Endpoint for Unity to submit a change of action buttons (for example scene changes)
+
+Route::get('/show-trigger-buttons', [App\Http\Controllers\TriggerButtonController::class, 'show'])->name('trigger-buttons.show'); //endpoint to retreive the currently known action buttons for building the UI in the dashboard
 
 Route::get('/laravel', function () {
     return view('welcome');

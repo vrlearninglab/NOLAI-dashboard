@@ -55,6 +55,10 @@ button:hover {
     background-color: #B06550; /* Donkerdere variant van accentkleur */
 }
 
+button:active {
+    transform: scale(0.95); /* Maak de knop kleiner bij klikken */
+}
+
 header {
     width: 100%;
     background-color: var(--secondary);
@@ -555,6 +559,7 @@ footer {
     padding-top: 20px; /* Extra ruimte voor nettere opmaak */
     position: relative;
     z-index: 10;
+    height: 70vh;
 }
 
 /* Sessie-buttons sectie */

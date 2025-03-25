@@ -31,22 +31,11 @@
     <article class="sessie-controls">
         <section class="sessie-buttons">
             <h2>VR-besturing</h2>
-            <section class="sessie-buttons-content">
-                <h3>Geluid</h3>
-                <button onclick="sendToUnity('a')">Start a</button>
-                <button onclick="sendToUnity('b')">Start b</button>
-                <button onclick="sendToUnity('c')">Start c</button>
-                <button onclick="sendToUnity('d')">Start d</button>
-                <button onclick="sendToUnity('e')">Start e</button>
-                <button onclick="sendToUnity('f')">Start f</button>
-
-                <h3>Scene</h3>
-                <button onclick="sendToUnity('a')">Start a</button>
-                <button onclick="sendToUnity('b')">Start b</button>
-                <button onclick="sendToUnity('c')">Start c</button>
-                <button onclick="sendToUnity('d')">Start d</button>
-                <button onclick="sendToUnity('e')">Start e</button>
-                <button onclick="sendToUnity('f')">Start f</button>
+            <section id="sessie-buttons-content">
+                <button onclick="CreateActionButtons()" style="width:min-content; gab: 1em;">⟳</button>
+                <h3>Unity Acties</h3>
+                <p>❌ Er zijn momenteel geen acties gedefineert. Ververs de actie knoppen</p>
+                
             </section>
         </section>
 
