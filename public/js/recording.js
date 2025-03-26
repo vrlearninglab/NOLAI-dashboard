@@ -2,9 +2,8 @@ document.addEventListener('DOMContentLoaded', function () {
     let images = [];
     let index = 0;
     let playbackInterval;
-
-    // De sessie-ID wordt van de blade naar JS doorgegeven
-    let sessionId = window.sessionId;
+    let audio1, audio2; // Twee audio-objecten
+    let sessionId = window.sessionId; // Haal sessie-ID op
 
     async function fetchImages() {
         try {
@@ -15,15 +14,42 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    async function fetchAudio() {
+        try {
+            const response = await fetch(`/get-audio/${sessionId}`);
+            const audioFiles = await response.json();
+
+            if (audioFiles.length < 2) {
+                console.error("Niet genoeg audiobestanden gevonden.");
+                return;
+            }
+
+            audio1 = new Audio(`/storage/${audioFiles[0]}`);
+            audio2 = new Audio(`/storage/${audioFiles[1]}`);
+
+            // Wacht tot beide geladen zijn en start ze dan tegelijk
+            await Promise.all([audio1.load(), audio2.load()]);
+        } catch (error) {
+            console.error('Fout bij het ophalen van de audiobestanden:', error);
+        }
+    }
+
     async function startPlayback() {
         await fetchImages();
-        if (images.length === 0) {
-            alert("Geen afbeeldingen gevonden!");
+        await fetchAudio();
+
+        if (!audio1 || !audio2) {
+            alert("Geluid kan niet worden afgespeeld!");
             return;
         }
 
         index = 0;
         clearInterval(playbackInterval);
+
+        // Start beide audios tegelijk
+        audio1.play();
+        audio2.play();
+
         playbackInterval = setInterval(() => {
             if (index >= images.length) {
                 clearInterval(playbackInterval);

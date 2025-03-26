@@ -12,6 +12,7 @@ use App\Http\Controllers\ProcessController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\StreamController;
+use App\Models\Audio;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,6 +62,10 @@ Route::post('/store-image-batch', [ImageController::class, 'storeBatch']);
 
 Route::get('/recording', [ImageController::class, 'showRecording']);
 Route::get('/get-images/{sessionId}', [ImageController::class, 'getImages']);
+Route::get('/get-audio/{sessionId}', function ($sessionId) {
+    $audios = Audio::where('session_id', $sessionId)->pluck('file_path'); 
+    return response()->json($audios);
+});
 
 Route::post('/upload-audio', [AudioController::class, 'uploadAudio']);
 
