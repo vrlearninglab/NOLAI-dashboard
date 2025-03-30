@@ -12,6 +12,7 @@ use App\Http\Controllers\ProcessController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\StreamController;
+use App\Http\Controllers\TimerController;
 use App\Models\Audio;
 
 /*
@@ -74,6 +75,10 @@ Route::post('/update-stream', [StreamController::class, 'updateStream']);
 Route::post('/trigger-buttons', [App\Http\Controllers\TriggerButtonController::class, 'store'])->name('trigger-buttons.store'); //Endpoint for Unity to submit a change of action buttons (for example scene changes)
 
 Route::get('/show-trigger-buttons', [App\Http\Controllers\TriggerButtonController::class, 'show'])->name('trigger-buttons.show'); //endpoint to retreive the currently known action buttons for building the UI in the dashboard
+
+Route::post('/save-timer', [TimerController::class, 'store']);
+
+Route::get('/check-stream', [StreamController::class, 'checkStream']);
 
 Route::get('/laravel', function () {
     return view('welcome');

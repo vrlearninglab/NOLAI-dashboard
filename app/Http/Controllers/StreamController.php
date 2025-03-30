@@ -43,4 +43,17 @@ class StreamController extends Controller
 
         return view('sessie', compact('streamURL', 'session'));
     }
+
+    public function checkStream()
+    {
+        $streamSetting = StreamSetting::first();
+
+        $streamURL = $streamSetting && $streamSetting->ip && $streamSetting->port
+            ? "http://{$streamSetting->ip}:{$streamSetting->port}/stream/"
+            : null;
+
+        return response()->json([
+            'streamURL' => $streamURL
+        ]);
+    }
 }

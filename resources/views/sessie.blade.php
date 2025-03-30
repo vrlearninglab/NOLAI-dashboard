@@ -16,13 +16,12 @@
             <span>Terug</span>
         </a>
         <h1>VR-woordenschat dashboard</h1>
-        <button onclick="sendToUnity('Stop stream')" class="stop-stream">Sessie beëindigen</button>
+        <button onclick="openPopup()" class="stop-stream">Sessie beëindigen</button>
     </header>
 
     <article class="sessie-info">
         <h1>Sessie dashboard</h1>
         <section class="sessie-details">
-            <!-- Toon de sessie-informatie hier -->
             @if ($session)
                 <p>Datum: {{ $session->created_at }}</p>
                 <p>Onderzoeker: {{ $session->user->name }}</p>
@@ -40,20 +39,23 @@
                 <button onclick="CreateActionButtons()" style="width:min-content; gab: 1em;">⟳</button>
                 <h3>Unity Acties</h3>
                 <p>❌ Er zijn momenteel geen acties gedefineert. Ververs de actie knoppen</p>
-                
             </section>
         </section>
 
         <section class="livestream">
             <h2>Live Unity Stream</h2>
             <div>
+                <!-- Dit moet automatisch runnen op het momement dat de stream url bestaat -->
                 @if ($streamURL)
-                    <img src="{{ $streamURL }}" alt="Stream niet gestart, of reload de pagina">
+                    <img src="{{ $streamURL }}" alt="">
                 @else
                     <p>Geen stream url gevonden.</p>
                 @endif
             </div>
-            <button onclick="sendToUnity('Start stream')">Start recorden en streamen</button>
+            <div>
+                <button onclick="startStream()">Start recorden en streamen</button> <!-- De buttom om de stream te starten -->
+                <span id="timer">00:00</span>
+            </div>
         </section>
 
         <section class="sessie-notes">
@@ -67,7 +69,28 @@
         </section>
     </article>
 
+     <!-- De pop-up overlay -->
+    <article class="popup-overlay" id="popupOverlay">
+        <section class="popup" id="popupOverlayConfirm">
+            <h2>Sessie beëindigen</h2>
+            <p>Weet je zeker dat je de sessie wilt beëindigen?</p>
+            <section class="popup-buttons">
+                <button class="cancel-btn" onclick="closePopup()">Annuleren</button>
+                <button class="confirm-btn" onclick="confirmAndSendToUnity()">Bevestigen</button>
+            </section>
+        </section>
+
+        <section class="popup popup-save" id="popupOverlaySave">
+            <h2>Sessie beëindigen</h2>
+            <p>Gegevens worden opgeslagen...</p>
+            <button class="confirm-btn" disabled>Home</button>
+        </section>
+    </article>
+
     <footer>
     </footer>
+    <script>
+        window.sessionId = {{ $session->id ?? 'null' }}
+    </script>
 </body>
 </html>

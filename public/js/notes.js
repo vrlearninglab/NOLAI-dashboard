@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", fetchNotes);zz
+document.addEventListener("DOMContentLoaded", fetchNotes);
 
 function fetchNotes() {
     let sessionId = window.sessionId || null; // Haal de sessie-ID op uit de globale variabele
