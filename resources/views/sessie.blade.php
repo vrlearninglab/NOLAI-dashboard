@@ -35,8 +35,8 @@
     <article class="sessie-controls">
         <section class="sessie-buttons">
             <h2>VR-besturing</h2>
+            <button onclick="CreateActionButtons()" style="width:min-content;">⟳</button>
             <section id="sessie-buttons-content">
-                <button onclick="CreateActionButtons()" style="width:min-content; gab: 1em;">⟳</button>
                 <h3>Unity Acties</h3>
                 <p>❌ Er zijn momenteel geen acties gedefineert. Ververs de actie knoppen</p>
             </section>

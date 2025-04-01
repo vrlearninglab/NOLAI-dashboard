@@ -20,5 +20,6 @@ class VerifyCsrfToken extends Middleware
         '/store-image-batch',
         '/update-stream',
         '/trigger-buttons',
+        '/set-unity-status',
     ];
 }

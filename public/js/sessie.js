@@ -1,6 +1,23 @@
 var ActionButtonsContainer = document.getElementById('sessie-buttons-content');
 let timerInterval;
+let pollingInterval;
+// let buttonsInterval;
 let secondsElapsed = 0;
+
+function checkMessage(message) {
+    const sceneSwitchMessages = [];
+    sceneSwitchMessages.push("Scene (A0_onboarding)", "Scene (A1_Markt)", "Scene (A2_Schipgereedmaken)", "Scene (A3_Varen)");
+    let messageText = message.data[0].text;
+
+    console.log(message);
+    sendToUnity(message);
+
+    if (sceneSwitchMessages.includes(messageText)){
+        setTimeout(() => {
+            startStream();
+        }, 5000);
+    }
+}
 
 async function sendToUnity(message) {
     try {
@@ -29,8 +46,43 @@ function closePopup() {
 function confirmAndSendToUnity() {
     document.getElementById("popupOverlayConfirm").style.display = "none";
     document.getElementById("popupOverlaySave").style.display = "block";
+
     stopTimer();
     sendToUnity('Stop stream');
+    startResponsePolling();
+}
+
+function startResponsePolling() {
+    pollingInterval = setInterval(async () => {
+        try {
+            const response = await fetch('/get-unity-status '); 
+            const data = await response.json();
+            console.log(data.message);
+
+            if (data.message === "Data opgeslagen") {
+                enableHomeButton();
+            }
+        } catch (error) {
+            console.error("Fout bij ophalen status:", error);
+        }
+    }, 3000);
+}
+
+function stopPolling() {
+    clearInterval(pollingInterval);
+}
+
+function enableHomeButton() {
+    const homeButton = document.querySelector('#popupOverlaySave .confirm-btn');
+    if (homeButton) {
+        homeButton.disabled = false;
+
+        homeButton.addEventListener('click', function() {
+            window.location.href = "/home/{name}";
+        });
+    }
+
+    stopPolling();
 }
 
 function startStream() {
@@ -88,6 +140,7 @@ function CreateActionButtons() {
             return response.json();
         })
         .then(data => {
+            // buttonsInterval = setInterval(() => {}, 1000);
             console.log('Trigger Buttons Data:', data);
             ActionButtonsContainer.innerHTML = ''; //Clear container
 
@@ -96,7 +149,7 @@ function CreateActionButtons() {
                     // Find or create a subcontainer for the group
                     let groupContainer = document.querySelector(`.group-container[data-group="${element.group}"]`);
                     if (!groupContainer) {
-                        groupContainer = document.createElement('div');
+                        groupContainer = document.createElement('section');
                         groupContainer.classList.add('group-container');
                         groupContainer.setAttribute('data-group', element.group);
 
@@ -114,15 +167,15 @@ function CreateActionButtons() {
                     button.innerHTML = element.text;
 
                     // Set the button color based on the element's color property
-                    if (element.color) {
-                        const { r, g, b } = element.color;
-                        button.style.backgroundColor = `rgb(${r * 255}, ${g * 255}, ${b * 255})`;
-                    }
+                    // if (element.color) {
+                    //     const { r, g, b } = element.color;
+                    //     button.style.backgroundColor = `rgb(${r * 255}, ${g * 255}, ${b * 255})`;
+                    // }
 
                     let UnitySendObject = { data: [{ id: element.id, text: element.text }] };
 
                     button.onclick = () => {
-                        sendToUnity(UnitySendObject);
+                        checkMessage(UnitySendObject);
                     }
 
                     // Append the button to the group container

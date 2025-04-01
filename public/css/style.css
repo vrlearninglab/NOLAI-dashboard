@@ -563,7 +563,7 @@ footer {
 
 /* Sessie-buttons sectie */
 .sessie-buttons {
-    flex: 1 1 30%; /* Flex-grow: 1 betekent dat het kan groeien en 30% van de breedte neemt */
+    flex: 1 1 20%; /* Flex-grow: 1 betekent dat het kan groeien en 30% van de breedte neemt */
     min-height: 90%; /* Minimaal hoogte voor buttons-sectie */
     max-height: 90%;
     overflow-y: auto;
@@ -891,4 +891,14 @@ tbody tr:hover {
     text-align: center;
     min-width: 0.5vh;
     margin-left: 2vh;
+}
+
+
+
+
+
+
+
+.group-container button {
+    width: 100%;
 }
