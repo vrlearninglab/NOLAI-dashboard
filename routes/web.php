@@ -81,7 +81,7 @@ Route::post('/save-timer', [TimerController::class, 'store']);
 Route::get('/check-stream', [StreamController::class, 'checkStream']);
 
 Route::post('/set-unity-status', function () {
-    Cache::put('unity_status', 'Data opgeslagen', now()->addMinutes(10));
+    Cache::put('unity_status', 'Data opgeslagen', now()->addMinutes(1));
     return response()->json(['message' => 'Data opgeslagen']);
 });
 

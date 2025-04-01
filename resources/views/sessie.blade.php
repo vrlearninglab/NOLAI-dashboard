@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Live Unity Stream</title>
     <link href="{{ asset('css/style.css') }}" rel='stylesheet' type='text/css' />
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="{{ asset('js/axios.min.js') }}"></script>
     <script src="{{ asset('js/sessie.js') }}" defer></script>
     <script src="{{ asset('js/notes.js') }}" defer></script>
 </head>

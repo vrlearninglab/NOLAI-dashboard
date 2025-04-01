@@ -1,7 +1,6 @@
 var ActionButtonsContainer = document.getElementById('sessie-buttons-content');
 let timerInterval;
 let pollingInterval;
-// let buttonsInterval;
 let secondsElapsed = 0;
 
 function checkMessage(message) {
@@ -15,6 +14,7 @@ function checkMessage(message) {
     if (sceneSwitchMessages.includes(messageText)){
         setTimeout(() => {
             startStream();
+            CreateActionButtons();
         }, 5000);
     }
 }
@@ -47,8 +47,8 @@ function confirmAndSendToUnity() {
     document.getElementById("popupOverlayConfirm").style.display = "none";
     document.getElementById("popupOverlaySave").style.display = "block";
 
-    stopTimer();
     sendToUnity('Stop stream');
+    stopTimer();
     startResponsePolling();
 }
 
@@ -140,7 +140,6 @@ function CreateActionButtons() {
             return response.json();
         })
         .then(data => {
-            // buttonsInterval = setInterval(() => {}, 1000);
             console.log('Trigger Buttons Data:', data);
             ActionButtonsContainer.innerHTML = ''; //Clear container
 
