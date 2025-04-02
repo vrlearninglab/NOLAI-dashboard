@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             document.getElementById("playbackImage").src = "/storage/" + images[index];
             index++;
-        }, 100);
+        }, 202);
     }
 
     window.startPlayback = startPlayback;
