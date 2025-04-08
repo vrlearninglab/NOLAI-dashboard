@@ -20,7 +20,6 @@ class TriggerButtonController extends Controller
     public function show()
     {
         $data = Cache::get('trigger_buttons', []);
-        Log::info('trigger_buttons', $data);
         return response()->json(['data' => $data], 200);
     }
 }
