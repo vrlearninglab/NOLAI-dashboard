@@ -51,7 +51,6 @@ class SessionController extends Controller
     // Toon de details van een specifieke sessie
     public function show($id)
     {
-        // Haal de sessie op met de bijbehorende gebruiker en student
         $session = Session::with(['user', 'student'])->find($id);
 
         if (!$session) {
