@@ -11,7 +11,12 @@ function checkMessage(message) {
     console.log(message);
     sendToUnity(message);
 
-    if (sceneSwitchMessages.includes(messageText)){
+    if (messageText == "Scene (MENU)") {
+        setTimeout(() => {
+            CreateActionButtons();
+        }, 5000);
+    }
+    else if (sceneSwitchMessages.includes(messageText)){
         setTimeout(() => {
             startStream();
             CreateActionButtons();

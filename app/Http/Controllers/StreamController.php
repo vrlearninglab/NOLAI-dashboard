@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\StreamSetting;
-use App\Models\Session; // Voeg de Session model toe om sessie-informatie op te halen
+use App\Models\Session;
 
 class StreamController extends Controller
 {
