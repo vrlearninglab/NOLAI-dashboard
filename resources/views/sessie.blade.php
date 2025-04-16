@@ -11,10 +11,10 @@
 </head>
 <body>
     <header>
-        <!-- <a href="{{ url('/home/{name}') }}" class="return-button">
+        <a href="{{ url('/home/{name}') }}" class="return-button">
             <img src="{{ asset('img/icon_return.png') }}" alt="Terug" width="40" height="40">
             <span>Terug</span>
-        </a> -->
+        </a>
         <h1>VR-woordenschat dashboard</h1>
         <button onclick="openPopup()" class="stop-stream">Sessie beëindigen</button>
     </header>
