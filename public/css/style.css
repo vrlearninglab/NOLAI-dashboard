@@ -954,3 +954,39 @@ input[type="number"] {
     width: 12vh;
     background-color: var(--secondary);
 }
+
+/* Webkit browsers: Chrome, Edge, Safari */
+#progressBar::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background-color: var(--accent);
+    border: 2px solid white;
+    border-radius: 50%;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+  
+#progressBar::-webkit-slider-thumb:hover {
+    background-color: #c06b54;
+    transform: scale(1.1);
+}
+  
+/* Firefox */
+#progressBar::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background-color: var(--accent);
+    border: 2px solid white;
+    border-radius: 50%;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+  
+#progressBar::-moz-range-thumb:hover {
+    background-color: #c06b54;
+    transform: scale(1.1);
+}
