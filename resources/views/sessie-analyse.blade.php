@@ -9,7 +9,7 @@
     <script src="{{ asset('js/recording.js') }}" defer></script>
     <script src="{{ asset('js/notes.js') }}" defer></script>
 </head>
-<body>
+<body data-session-id="{{ $session->id }}" data-full-time="{{ $session->timer->full_time }}">
     <header>
         <a href="{{ url('/select-session') }}" class="return-button">
             <img src="{{ asset('img/icon_return.png') }}" alt="Terug" width="40" height="40">
@@ -26,16 +26,34 @@
             <p>Datum aangemaakt: {{ $session->created_at }}</p>
             <p>Naam Onderzoeker: {{ $session->user->name }}</p>
             <p>Studentnummer: {{ $session->student->student_nummer }}</p>
+            <!-- <p>Tijd: {{ $session->timer->full_time }}</p> -->
         </section>
     </article>
 
     <article class="sessie-controls">
         <section class="livestream">
             <h2>Recording Playback</h2>
-            <div>
+
+            <div class="playback-container">
                 <img id="playbackImage" alt="Playback">
             </div>
-            <button onclick="startPlayback()">Start Playback</button>
+
+            <button onclick="startPlayback()" id="js-livestream-button">▶ Start</button>
+
+            <div class="media-controls" id="js-livestream-handles">
+                <div>
+                    <label for="timeFrameInput">Frames (ms):</label>
+                    <input type="number" id="timeFrameInput" value="201" min="1" step="10">
+
+                    <button id="updateTimeFrameButton" class="media-button">Update</button>
+                </div>
+
+                <div class="progress-container">
+                    <button onclick="pauseHandler()" id="js-pausebutton" class="media-button">⏸</button>
+                    <input type="range" id="progressBar" value="0" min="0" step="1">
+                    <p>{{ $session->timer->full_time }}</p>
+                </div>
+            </div>
         </section>
 
         <section class="sessie-notes">

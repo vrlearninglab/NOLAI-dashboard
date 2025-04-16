@@ -9,7 +9,7 @@ class Session extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['student_id', 'user_id'];
+    protected $fillable = ['student_id', 'user_id', 'timer'];
 
     public function user()
     {
@@ -19,5 +19,10 @@ class Session extends Model
     public function student()
     {
         return $this->belongsTo(Student::class);
+    }
+
+    public function timer()
+    {
+        return $this->hasOne(Timer::class);
     }
 }
