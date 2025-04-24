@@ -893,18 +893,19 @@ tbody tr:hover {
     margin-left: 2vh;
 }
 
-
-
-
-
-
-
 .progress-container {
-    width: 50%;
+    width: 60%;
     padding: 0 1rem;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
+    margin-left: 10vh;
+}
+
+.progress-container p {
+    display: flex;
+    flex-direction: row;
+    width: 15%;
 }
 
 #progressBar {
@@ -931,7 +932,6 @@ tbody tr:hover {
     display: none;
     align-items: center;
     justify-content: center;
-    justify-content: space-evenly;
     background-color: var(--primary);
     border-radius: 1rem;
 }
@@ -940,6 +940,10 @@ tbody tr:hover {
     color: white;
     background-color: var(--primary);
     padding: 0.5vh;
+}
+
+#js-pausebutton {
+    width: 5vh;
 }
 
 input[type="number"] {

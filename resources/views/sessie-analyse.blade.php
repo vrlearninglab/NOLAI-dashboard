@@ -26,7 +26,6 @@
             <p>Datum aangemaakt: {{ $session->created_at }}</p>
             <p>Naam Onderzoeker: {{ $session->user->name }}</p>
             <p>Studentnummer: {{ $session->student->student_nummer }}</p>
-            <!-- <p>Tijd: {{ $session->timer->full_time }}</p> -->
         </section>
     </article>
 
@@ -51,7 +50,7 @@
                 <div class="progress-container">
                     <button onclick="pauseHandler()" id="js-pausebutton" class="media-button">⏸</button>
                     <input type="range" id="progressBar" value="0" min="0" step="1">
-                    <p>{{ $session->timer->full_time }}</p>
+                    <p><span id="currentTimeDisplay">0:00</span>&nbsp;/&nbsp;{{ $session->timer->full_time }}</p>
                 </div>
             </div>
         </section>
