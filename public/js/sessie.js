@@ -171,10 +171,10 @@ function CreateActionButtons() {
                     button.innerHTML = element.text;
 
                     // Set the button color based on the element's color property
-                    // if (element.color) {
-                    //     const { r, g, b } = element.color;
-                    //     button.style.backgroundColor = `rgb(${r * 255}, ${g * 255}, ${b * 255})`;
-                    // }
+                    if (element.color) {
+                        const { r, g, b } = element.color;
+                        button.style.backgroundColor = `rgb(${r * 255}, ${g * 255}, ${b * 255})`;
+                    }
 
                     let UnitySendObject = { data: [{ id: element.id, text: element.text }] };
 
