@@ -73,8 +73,14 @@ function updateFrame() {
         clearInterval(playbackInterval);
         return;
     }
+
     document.getElementById("playbackImage").src = "/storage/" + images[index];
     progressBar.value = index;
+
+    // Bereken huidige tijd
+    const currentTime = index * timeFrame;
+    document.getElementById("currentTimeDisplay").innerText = formatTime(currentTime);
+
     index++;
 }
 
@@ -128,6 +134,19 @@ function setStreamButtons() {
     document.getElementById("js-livestream-handles").style.display = "flex";
 }
 
+function formatTime(ms) {
+    let totalSeconds = Math.floor(ms / 1000);
+    let hours = Math.floor(totalSeconds / 3600);
+    let minutes = Math.floor((totalSeconds % 3600) / 60);
+    let seconds = totalSeconds % 60;
+
+    const pad = n => n.toString().padStart(2, '0');
+    return hours > 0
+        ? `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`
+        : `${pad(minutes)}:${pad(seconds)}`;
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('timeFrameInput');
     const button = document.getElementById('updateTimeFrameButton');
@@ -148,11 +167,15 @@ document.addEventListener('DOMContentLoaded', () => {
     progressBar.addEventListener('input', function (e) {
         const newIndex = parseInt(e.target.value);
         index = newIndex;
-
+    
         document.getElementById("playbackImage").src = "/storage/" + images[index];
-
+    
         const percentage = index / images.length;
         if (audio1) audio1.currentTime = audio1.duration * percentage;
         if (audio2) audio2.currentTime = audio2.duration * percentage;
-    });
+    
+        // Update de weergegeven tijd
+        const currentTime = index * timeFrame;
+        document.getElementById("currentTimeDisplay").innerText = formatTime(currentTime);
+    });    
 });

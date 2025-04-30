@@ -822,18 +822,19 @@ tbody tr:hover {
     margin-left: 2vh;
 }
 
-
-
-
-
-
-
 .progress-container {
-    width: 50%;
+    width: 60%;
     padding: 0 1rem;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
+    margin-left: 10vh;
+}
+
+.progress-container p {
+    display: flex;
+    flex-direction: row;
+    width: 15%;
 }
 
 #progressBar {
@@ -851,7 +852,6 @@ tbody tr:hover {
     display: none;
     align-items: center;
     justify-content: center;
-    justify-content: space-evenly;
     background-color: var(--primary);
     border-radius: 1rem;
 }
@@ -860,6 +860,10 @@ tbody tr:hover {
     color: white;
     background-color: var(--primary);
     padding: 0.5vh;
+}
+
+#js-pausebutton {
+    width: 5vh;
 }
 
 input[type="number"] {
@@ -875,6 +879,7 @@ input[type="number"] {
     background-color: var(--secondary);
 }
 
+<<<<<<< HEAD
 
 
 /* Sessie-controls container */
@@ -945,4 +950,40 @@ input[type="number"] {
     display: flex;
     flex-direction: column;
     gap: 2vh;
+=======
+/* Webkit browsers: Chrome, Edge, Safari */
+#progressBar::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background-color: var(--accent);
+    border: 2px solid white;
+    border-radius: 50%;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+  
+#progressBar::-webkit-slider-thumb:hover {
+    background-color: #c06b54;
+    transform: scale(1.1);
+}
+  
+/* Firefox */
+#progressBar::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background-color: var(--accent);
+    border: 2px solid white;
+    border-radius: 50%;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+  
+#progressBar::-moz-range-thumb:hover {
+    background-color: #c06b54;
+    transform: scale(1.1);
+>>>>>>> f5601903a69d274694478aa69ed29b667e5b0799
 }
