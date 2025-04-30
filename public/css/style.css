@@ -545,6 +545,77 @@ footer {
     margin: 0;
 }
 
+/* Sessie-controls container */
+.sessie-controls {
+    display: flex;
+    justify-content: flex-start;
+    align-items: stretch;
+    gap: 20px;
+    max-height: 90%;
+    min-height: 70%;
+    width: 95%;
+    margin-top: 5%; /* Ruimte boven de sectie om overlap te voorkomen */
+    padding-top: 20px; /* Extra ruimte voor nettere opmaak */
+    position: relative;
+    z-index: 10;
+    height: 70vh;
+}
+
+/* Sessie-buttons sectie */
+.sessie-buttons {
+    flex: 1 1 20%; /* Flex-grow: 1 betekent dat het kan groeien en 30% van de breedte neemt */
+    min-height: 90%; /* Minimaal hoogte voor buttons-sectie */
+    max-height: 90%;
+    overflow-y: auto;
+    background-color: var(--secondary);
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Ruimte tussen secties */
+}
+
+/* Titel van de sessie-buttons */
+.sessie-buttons h2 {
+    font-size: 24px;
+    color: #fff;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* Subtitels voor secties (bijvoorbeeld Geluid, Scene) */
+.sessie-buttons h3 {
+    font-size: 20px;
+    color: #fff;
+    margin-top: 20px;
+}
+
+/* Content binnen de sessie-buttons sectie */
+.sessie-buttons-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Knoppen binnen de sessie-buttons sectie */
+.sessie-buttons button {
+    margin: 5px 0; /* Optionele extra ruimte boven en onder de knoppen */
+    padding: 12px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s ease-in-out;
+}
+
+/* Scrollbare sectie voor knoppen */
+.sessie-buttons-content {
+    max-height: 500px; /* Max hoogte voor scrollbare sectie */
+    overflow-y: auto; /* Zorgt voor scrollen als inhoud groter is dan max-height */
+    padding-right: 10px; /* Extra ruimte aan de rechterkant voor scrollbalk */
+}
+
 /* Livestream sectie */
 .livestream {
     flex: 2 1 50%; /* Livestream is groter, 50% van de breedte */
@@ -848,6 +919,15 @@ tbody tr:hover {
     margin: 2vh;
 }
 
+#progressBar::-webkit-slider-thumb {
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -3px;
+}
+
 .media-controls {
     display: none;
     align-items: center;
@@ -879,78 +959,6 @@ input[type="number"] {
     background-color: var(--secondary);
 }
 
-<<<<<<< HEAD
-
-
-/* Sessie-controls container */
-.sessie-controls {
-    display: flex;
-    justify-content: flex-start;
-    align-items: stretch;
-    gap: 20px;
-    max-height: 90%;
-    min-height: 70%;
-    width: 95%;
-    margin-top: 5%; /* Ruimte boven de sectie om overlap te voorkomen */
-    padding-top: 20px; /* Extra ruimte voor nettere opmaak */
-    position: relative;
-    z-index: 10;
-    height: 70vh;
-}
-
-/* Sessie-buttons sectie */
-.sessie-buttons {
-    flex: 1 1 20%; /* Flex-grow: 1 betekent dat het kan groeien en 30% van de breedte neemt */
-    min-height: 90%; /* Minimaal hoogte voor buttons-sectie */
-    max-height: 90%;
-    overflow-y: auto;
-    background-color: var(--secondary);
-    padding: 15px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-    gap: 20px; /* Ruimte tussen secties */
-}
-
-/* Titel van de sessie-buttons */
-.sessie-buttons h2 {
-    font-size: 24px;
-    color: #fff;
-    margin-bottom: 10px;
-    text-align: center;
-}
-
-/* Subtitels voor secties (bijvoorbeeld Geluid, Scene) */
-.sessie-buttons h3 {
-    font-size: 20px;
-    color: #fff;
-    margin-top: 20px;
-}
-
-/* Knoppen binnen de sessie-buttons sectie */
-.sessie-buttons button {
-    margin: 5px 0; /* Optionele extra ruimte boven en onder de knoppen */
-    padding: 12px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s ease-in-out;
-}
-
-/* Scrollbare sectie voor knoppen */
-.sessie-buttons-content {
-    max-height: 500px; /* Max hoogte voor scrollbare sectie */
-    overflow-y: auto; /* Zorgt voor scrollen als inhoud groter is dan max-height */
-    padding-right: 10px; /* Extra ruimte aan de rechterkant voor scrollbalk */
-}
-
-.group-container {
-    display: flex;
-    flex-direction: column;
-    gap: 2vh;
-=======
 /* Webkit browsers: Chrome, Edge, Safari */
 #progressBar::-webkit-slider-thumb {
     -webkit-appearance: none;
@@ -985,5 +993,4 @@ input[type="number"] {
 #progressBar::-moz-range-thumb:hover {
     background-color: #c06b54;
     transform: scale(1.1);
->>>>>>> f5601903a69d274694478aa69ed29b667e5b0799
 }
