@@ -68,7 +68,8 @@ Route::get('/get-audio/{sessionId}', function ($sessionId) {
     return response()->json($audios);
 });
 
-Route::post('/upload-audio', [AudioController::class, 'uploadAudio']);
+Route::post('/upload-audio', [AudioController::class, 'uploadAudio']); // ingame audio die constant gestreamed word
+Route::post('/upload-microphone-audio', [AudioController::class, 'uploadMicrophoneAudio']);  // audio die incidenteel wordt verzonden van microfoon
 
 Route::post('/update-stream', [StreamController::class, 'updateStream']);
 

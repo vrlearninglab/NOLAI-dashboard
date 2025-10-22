@@ -1,0 +1,49 @@
+
+services:
+  app:
+    build: .
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+    depends_on:
+      - db
+      - speaches
+    command: >
+      sh -c "
+      php artisan storage:link &&
+      apache2-foreground
+      "
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: vrll
+      MYSQL_DATABASE: laravel
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  speaches:  
+    image: ghcr.io/speaches-ai/speaches:latest-cuda
+    ports:
+      - "8001:8000"  # Speaches draait op poort 8000 in de container, maar we mappen het naar 8001 op de host
+    volumes:
+      - hf-hub-cache:/home/ubuntu/.cache/huggingface/hub
+    environment:
+      - HUGGINGFACE_HUB_CACHE=/home/ubuntu/.cache/huggingface
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+volumes:
+  mysql-data:
+  hf-hub-cache:  # Volume voor de cache van Speaches
