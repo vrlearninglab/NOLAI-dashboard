@@ -1,0 +1,6 @@
+huggingface_hub>=0.20.2
+uvicorn>=0.27.0
+fastapi>=0.109.0
+transformers>=4.57.1
+torch==2.10.0.dev20251103+cu130 --extra-index-url https://download.pytorch.org/whl/nightly/cu130
+accelerate>=0.27.0

@@ -17,3 +17,18 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+
+# Virtual environments
+venv/
+.env
+.env.local
+.env*.local
+
+# Cache en logs
+storage/logs/
+storage/framework/views/
+storage/framework/cache/
+storage/framework/sessions/
+
+# AI-model (grote bestanden)
+ai-model/model/
