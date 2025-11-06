@@ -237,11 +237,15 @@ setInterval(pollForAIEvaluation, 1000);
 // Functie om de AI-evaluatie te verwerken
 function handleAIEvaluation(evaluation) {
     const buttons = document.querySelectorAll('button');
-    const targetButton = Array.from(buttons).find(b => b.textContent === "3) slepen naar koffer");
+    const goodButton = Array.from(buttons).find(b => b.textContent === "3) slepen naar koffer");
+    const badButton = Array.from(buttons).find(b => b.textContent === "4) goed, wil je mee?");
 
-    if (targetButton) {
+    if (evaluation == 1) {
         const unitySendObject = { data: [{ id: 3, text: "3) slepen naar koffer" }] };
-        selectAndTriggerButton(targetButton, unitySendObject);
+        selectAndTriggerButton(goodButton, unitySendObject);
+    } else{
+        const unitySendObject = { data: [{ id: 6, text: "4) goed, wil je mee?" }] };
+        selectAndTriggerButton(badButton, unitySendObject);
     }
 }
 
