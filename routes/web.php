@@ -70,6 +70,7 @@ Route::get('/get-audio/{sessionId}', function ($sessionId) {
 
 Route::post('/upload-audio', [AudioController::class, 'uploadAudio']); // ingame audio die constant gestreamed word
 Route::post('/upload-microphone-audio', [AudioController::class, 'uploadMicrophoneAudio']);  // audio die incidenteel wordt verzonden van microfoon
+Route::get('/pull-ai-evaluation', [App\Http\Controllers\AudioController::class, 'pullAIEvaluation'])->name('ai-evaluation.pull');
 
 Route::post('/update-stream', [StreamController::class, 'updateStream']);
 

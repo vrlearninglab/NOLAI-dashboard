@@ -3,6 +3,10 @@ let timerInterval;
 let pollingInterval;
 let secondsElapsed = 0;
 
+// Stel het CSRF-token globaal in voor axios
+const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
+
 function checkMessage(message) {
     const sceneSwitchMessages = [];
     sceneSwitchMessages.push("Scene (A0_onboarding)", "Scene (A1_Markt)", "Scene (A2_Schipgereedmaken)", "Scene (A3_Varen)");
@@ -176,8 +180,8 @@ function CreateActionButtons() {
                         button.style.backgroundColor = `rgb(${r * 255}, ${g * 255}, ${b * 255})`;
                     }
 
-                    let UnitySendObject = { data: [{ id: element.id, text: element.text }] };
-
+                    // send the message to play the scene of the button to unity
+                    let UnitySendObject = { data: [{ id: element.id, text: element.text }] };   
                     button.onclick = () => {
                         checkMessage(UnitySendObject);
                     }
@@ -210,4 +214,47 @@ function updateStreamImage(url) {
     streamContainer.innerHTML = `<img src="${url}" alt="">`;
 }
 
-setInterval(checkStreamStatus, 5000);
+setInterval(checkStreamStatus, 5000);   //check elke 5 seconde
+
+// Poll voor AI-evaluatie
+function pollForAIEvaluation() {
+    fetch('/pull-ai-evaluation')  // GET-request naar de route
+        .then(response => response.json())
+        .then(data => {
+            if (data.evaluation !== undefined) {
+                // Als er een evaluatie is, verwerk deze
+                handleAIEvaluation(data.evaluation);
+            }
+        })
+        .catch(error => {
+            console.error('Error polling for AI evaluation:', error);
+        });
+}
+
+// Start polling (elke seconde)
+setInterval(pollForAIEvaluation, 1000);
+
+// Functie om de AI-evaluatie te verwerken
+function handleAIEvaluation(evaluation) {
+    const buttons = document.querySelectorAll('button');
+    const targetButton = Array.from(buttons).find(b => b.textContent === "3) slepen naar koffer");
+
+    if (targetButton) {
+        const unitySendObject = { data: [{ id: 3, text: "3) slepen naar koffer" }] };
+        selectAndTriggerButton(targetButton, unitySendObject);
+    }
+}
+
+function selectAndTriggerButton(button, unitySendObject) {
+    console.log('Selecting button:', button, unitySendObject); 
+
+    button.style.outline = '3px solid yellow';
+    button.style.backgroundColor = 'rgba(255, 255, 0, 0.3)';
+
+    setTimeout(() => {
+        console.log('Triggering button:', unitySendObject); 
+        checkMessage(unitySendObject);
+    }, 1000);
+}
+
+

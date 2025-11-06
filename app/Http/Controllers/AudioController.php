@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 use App\Models\Audio;
 use App\Models\Session;
 
@@ -82,17 +83,21 @@ class AudioController extends Controller
 
         #check of er een ai beoordeling is
         if ($airesult !== null) {
-            \Log::info("AI result value: " . print_r($airesult, true));
+            // Zet de AI-evaluatie direct in de cache
+            Cache::put('latest_ai_evaluation', [
+                'evaluation' => $airesult,
+            ], now()->addMinutes(5));
+            // zet een vlag dat er een nieuwe AI evaluatie is
+            //Cache::put('ai_evaluation_ready', true, now()->addMinutes(5));
             return response()->json([
                 'success' => true,
                 'message' => 'Beoordeling succesvol.',
-                'evaluation' => $airesult,  // 0 of 1
-                'transcription' => $transcription,
+                'evaluation' => $airesult,
             ]);
         } else {
             return response()->json([
-                'success'=> false,
-                'error' => 'fout bij het evalueren met Ai',
+                'success' => false,
+                'error' => 'Fout bij het evalueren met AI.',
             ], 500);
         }
     }
@@ -138,15 +143,14 @@ class AudioController extends Controller
         }
     }
 
-
-
     private function evaluateAnswerWithAI($transcription, $question)
     {
         $client = new \GuzzleHttp\Client();
 
         $prompt = <<<EOD
         Je bent een simpel taalmodel. Je beoordeelt of twee zinnen dezelfde betekenis hebben.
-        Geef alleen 1 als output als de zinnen dezelfde betekenis hebben, en 0 als ze verschillen. Geef een korte uitleg.
+        Geef alleen 1 als output als de zinnen dezelfde betekenis hebben, en 0 als ze verschillen. 
+        Gebruik de voorbeelden om te snappen hoe je je antwoord moet vormen, maar geef zelf geen uitleg na de komma.
 
         Voorbeeld 1:
         Zin 1: Het anker zorgt dat de boot stil blijft liggen.
@@ -176,12 +180,16 @@ class AudioController extends Controller
             $result = json_decode($response->getBody(), true);
             \Log::info("AI response: " . json_encode($result));
 
-            // Check of het antwoord 'false' of 'correct' bevat
             if (isset($result['result'])) {
-                $aiOutput = strtolower($result['result']);
-                if (strpos($aiOutput, '0')) {
+                $aiOutput = $result['result'];
+
+                // Splits de string op de komma en pak het eerste deel
+                $firstToken = explode(',', $aiOutput)[0];
+
+                // Controleer of het eerste token "0" of "1" is
+                if (trim($firstToken) === '0') {
                     return 0;
-                } elseif (strpos($aiOutput, '1') ) {
+                } elseif (trim($firstToken) === '1') {
                     return 1;
                 }
             }
@@ -193,8 +201,14 @@ class AudioController extends Controller
             \Log::error("AI evaluation failed: " . $e->getMessage());
             return null;
         }
-
-
     }
     
+    public function pullAIEvaluation()
+    {
+        // Haal de evaluatie uit de cache en verwijder deze
+        $evaluation = Cache::pull('latest_ai_evaluation');
+
+        // Stuur de evaluatie terug als JSON
+        return response()->json($evaluation ?: []);
+    }
 }

@@ -24,7 +24,7 @@ async def evaluate(request: Request, prompt: str = None, evaluation_request: Eva
 
     # Verwerk de prompt
     inputs = tokenizer(prompt, return_tensors="pt").to("cuda")
-    outputs = model.generate(**inputs, max_new_tokens=32)
+    outputs = model.generate(**inputs, max_new_tokens=8)
     result = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
     # Haal alleen het nieuwe antwoord (na de prompt)
