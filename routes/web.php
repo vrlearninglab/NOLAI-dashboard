@@ -50,6 +50,7 @@ Route::post('/send-to-unity', function (Illuminate\Http\Request $request) {
     $message = $request->input('message', '');
 
     Cache::put('unity_message', $message, now()->addSeconds(10));
+    return response()->json(['status' => 'ok']);
 });
 
 
