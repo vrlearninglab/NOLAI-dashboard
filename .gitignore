@@ -32,3 +32,4 @@ storage/framework/sessions/
 
 # AI-model (grote bestanden)
 ai-model/model/
+/AI/__pycache__
