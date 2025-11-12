@@ -1,9 +1,11 @@
+version: "3.9"
 
 services:
   app:
     build: .
     ports:
       - "8000:80"
+      - "5000:5000" 
     volumes:
       - .:/var/www/html
     environment:
@@ -12,8 +14,12 @@ services:
     depends_on:
       - db
       - speaches
+      - ollama
     command: >
       sh -c "
+      echo 'Waiting for DB...' &&
+      sleep 10 &&
+      php artisan migrate --force &&
       php artisan storage:link &&
       apache2-foreground
       "
@@ -22,16 +28,16 @@ services:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: vrll
-      MYSQL_DATABASE: laravel
+      MYSQL_DATABASE: laravel_db
     ports:
       - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
 
-  speaches:  
+  speaches:
     image: ghcr.io/speaches-ai/speaches:latest-cuda
     ports:
-      - "8001:8000"  # Speaches draait op poort 8000 in de container, maar we mappen het naar 8001 op de host
+      - "8001:8000"
     volumes:
       - hf-hub-cache:/home/ubuntu/.cache/huggingface/hub
     environment:
@@ -44,6 +50,24 @@ services:
               count: 1
               capabilities: [gpu]
 
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+      - ./Modelfile:/Modelfile
+      - ./ollama-entrypoint.sh:/ollama-entrypoint.sh
+    entrypoint: ["/bin/sh", "/ollama-entrypoint.sh"]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
 volumes:
   mysql-data:
-  hf-hub-cache:  # Volume voor de cache van Speaches
+  hf-hub-cache:
+  ollama-data:

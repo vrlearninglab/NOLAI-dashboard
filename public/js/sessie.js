@@ -16,8 +16,10 @@ function checkMessage(message) {
         "Scene (A3_Varen)"
     );
     let messageText = message.data[0].text;
-
     console.log(message);
+
+
+
     sendToUnity(message);
 
     if (messageText == "Scene (MENU)") {
@@ -33,19 +35,61 @@ function checkMessage(message) {
 }
 
 async function sendToUnity(message) {
+    const buttons = document.querySelectorAll("button");
+    console.log("message: ", message);
+
+    if (!message.data || !message.data.length) {
+        console.warn("No data in message");
+        return;
+    }
+
+    const questionText = message.data[0].question;
+
+    // Find the button with the matching AskedQuestion
+    const questionButton = Array.from(buttons).find(
+        (btn) => btn.getAttribute("AskedQuestion") === questionText
+    );
+
+    console.log("Question Button: ", questionButton);
+
+    let AllAnswerOptions = [];
+
+    if (questionButton) {
+        const OriginalButtonText = questionButton.textContent.trim();
+        const match = OriginalButtonText.match(/^(\d+)\)/);
+        const number = match ? match[1] : null;
+
+        if (number) {
+            const regex = new RegExp(`^${number}[a-z]?\\)`);
+
+            AllAnswerOptions = Array.from(buttons)
+                .filter((b) => {
+                    const text = b.textContent.trim();
+                    return regex.test(text) && text !== OriginalButtonText;
+                })
+                .map((b) => b.innerHTML.trim());
+        }
+    } else {
+        console.warn("No button found for question:", questionText);
+    }
+
     try {
         const response = await fetch("/send-to-unity", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ message: message }),
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                message: message,
+                answerOptions: AllAnswerOptions,
+            }),
         });
+
         const data = await response.json();
+        console.log("Response from Unity:", data);
     } catch (error) {
         console.error("Fout bij het versturen van data:", error);
     }
 }
+
 
 function openPopup() {
     document.getElementById("popupOverlay").style.display = "flex";
@@ -189,9 +233,8 @@ function CreateActionButtons() {
                     // Set the button color based on the element's color property
                     if (element.color) {
                         const { r, g, b } = element.color;
-                        button.style.backgroundColor = `rgb(${r * 255}, ${
-                            g * 255
-                        }, ${b * 255})`;
+                        button.style.backgroundColor = `rgb(${r * 255}, ${g * 255
+                            }, ${b * 255})`;
                     }
 
                     // send the message to play the scene of the button to unity
@@ -273,44 +316,26 @@ setInterval(pollForAIEvaluation, 1000);
 
 // Functie om de AI-evaluatie te verwerken
 function handleAIEvaluation(evaluation, OriginalQuestion) {
-    console.log(evaluation);
-    console.log(OriginalQuestion);
+    console.log("AI Evaluation:", evaluation);
+    console.log("Original Question:", OriginalQuestion);
+
+    // Zoek de juiste vraagknop (optioneel)
     const buttons = document.querySelectorAll("button");
     const questionButton = Array.from(buttons).find(
         (btn) => btn.getAttribute("AskedQuestion") === OriginalQuestion
     );
-    let goodButton;
-    let badButton;
 
-    if (questionButton) {
-        const OriginalButtonText = questionButton.textContent.trim();
-        const match = OriginalButtonText.match(/^(\d+)\)/);
-        const number = match ? match[1] : null;
+    // Zoek de knop waarvan de tekst overeenkomt met de evaluatie
+    const evaluatedButton = Array.from(buttons).find((btn) => {
+        // Vergelijk zonder hoofdlettergevoeligheid en met trim()
+        return btn.textContent.trim().toLowerCase() === evaluation.trim().toLowerCase();
+    });
 
-        if (number) {
-            goodButton = Array.from(buttons).find((b) =>
-                b.textContent.trim().startsWith(`${number}a)`)
-            );
-            badButton = Array.from(buttons).find((b) =>
-                b.textContent.trim().startsWith(`${number}b)`)
-            );
-        }
-    }
-
-    // fallback (if not found by number) - keep previous explicit searches
-    if (!goodButton) {
-        console.error("Could not find good answer button for " + number);
-    }
-    if (!badButton) {
-        console.error("Could not find bad answer button for " + number);
-    }
-
-    if (evaluation == 1) {
-        
-        selectAndTriggerButton(goodButton);
+    if (evaluatedButton) {
+        console.log("Matched button:", evaluatedButton);
+        selectAndTriggerButton(evaluatedButton);
     } else {
-      
-        selectAndTriggerButton(badButton);
+        console.warn("No button found matching:", evaluation);
     }
 }
 
@@ -337,5 +362,7 @@ function selectAndTriggerButton(button) {
         } catch (e) {
             console.error("Error triggering button click:", e);
         }
+        button.style.outline = "none";
+    button.style.backgroundColor = "rgba(80, 80, 80, 0.3)";
     }, 1000);
 }

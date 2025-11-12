@@ -37,7 +37,7 @@ class AudioController extends Controller
             $micFilename = uniqid() . '_mic.wav';
             $micPath = $micFile->storeAs('audio_files', $micFilename, 'public');
             Audio::create([
-                'file_path' => $micPath, 
+                'file_path' => $micPath,
                 'audio_type' => 'microphone',
                 'session_id' => $latestSession->id, // Koppel de image aan de laatste sessie
             ]);
@@ -56,7 +56,7 @@ class AudioController extends Controller
             ], 400);
         }
 
-        \Log::info("er is een audio bestand");  
+        \Log::info("er is een audio bestand");
         \Log::info('Request fields:', $request->all());
 
         // Sla het audiobestand op
@@ -64,6 +64,7 @@ class AudioController extends Controller
         $micFilename = uniqid() . '_mic.wav';
         $micPath = $micFile->storeAs('audio_files', $micFilename, 'public');
         $AskedQuestion = $request->input('AskedQuestion');
+
 
 
         // Stuur het audiobestand naar Speaches voor transcriptie
@@ -75,12 +76,18 @@ class AudioController extends Controller
                 'success' => false,
                 'error' => 'Fout bij het transcriberen van het audiobestand.',
             ], 500);
-        } 
-        
-        \Log::info("Transcription wordt doorgestuurd naar AI");  
+        }
+
+
+        $KnownAnswerButtons = Cache::pull('LastAnswerButtons');
+        // Zorg dat KnownAnswerButtons altijd een string is
+        if (is_array($KnownAnswerButtons)) {
+            $KnownAnswerButtons = implode(', ', $KnownAnswerButtons);
+        }
+        \Log::info("Transcription wordt doorgestuurd naar AI met volgende waarde: $transcription, $AskedQuestion, $KnownAnswerButtons",);
 
         // stuur de transcriptie naar ai voor een antwoord
-        $airesult = $this->evaluateAnswerWithAI($transcription, $AskedQuestion);
+        $airesult = $this->evaluateAnswerWithAI($transcription, $AskedQuestion, $KnownAnswerButtons);
 
         #check of er een ai beoordeling is
         if ($airesult !== null) {
@@ -136,7 +143,6 @@ class AudioController extends Controller
             $responseBody = $response->getBody()->getContents();
             \Log::info("Transcription response: " . $responseBody);
             return $responseBody;
-
         } catch (\GuzzleHttp\Exception\RequestException $e) {
             \Log::error("Fout bij transcriberen: " . $e->getMessage());
             if ($e->hasResponse()) {
@@ -146,66 +152,52 @@ class AudioController extends Controller
         }
     }
 
-    private function evaluateAnswerWithAI($transcription, $question)
+    private function evaluateAnswerWithAI($transcription, $question, $AnswerOptions)
     {
         $client = new \GuzzleHttp\Client();
 
-        $prompt = <<<EOD
-        Je bent een simpel taalmodel. Je beoordeelt of twee zinnen dezelfde betekenis hebben.
-        Geef alleen 1 als output als de zinnen dezelfde betekenis hebben, en 0 als ze verschillen. 
-        Gebruik de voorbeelden om te snappen hoe je je antwoord moet vormen, maar geef zelf geen uitleg na de komma.
+        // Convert array to string if needed
+        if (is_array($AnswerOptions)) {
+            $AnswerOptions = implode(', ', $AnswerOptions);
+        }
 
-        Voorbeeld 1:
-        Zin 1: Het anker zorgt dat de boot stil blijft liggen.
-        Zin 2: Anker zorgt dat de boot op zijn plek blijft.
-        Output: 1, het kind zegt iets over op zijn plek blijven, dit is hetzelfde als stil blijven liggen
+        $userPrompt = <<<EOD
+    Vraag: $question
+    Antwoord kind: $transcription
+    Opties: {$AnswerOptions}
+    Output:
+    EOD;
 
-        Voorbeeld 2:
-        Zin 1: De bal is blauw.
-        Zin 2: De bal is rond.
-        Output: 0, het kind zegt iets over de vorm (rond), maar moet iets zeggen over de kleur (blauw)
-
-        Zin 1: $question
-        Zin 2: $transcription
-        Output:
-        EOD;
-
-         try {
-            $response = $client->post('http://host.docker.internal:8002/evaluate', [
+        try {
+            $response = $client->post('http://host.docker.internal:11434/v1/completions', [
                 'headers' => [
                     'Content-Type' => 'application/json',
                 ],
                 'json' => [
-                    'prompt' => $prompt,
+                    'model' => 'StudentLLM',
+                    'prompt' => $userPrompt,
+                    'temperature' => 0.0,
+                    'think' => false
                 ],
             ]);
 
             $result = json_decode($response->getBody(), true);
             \Log::info("AI response: " . json_encode($result));
 
-            if (isset($result['result'])) {
-                $aiOutput = $result['result'];
-
-                // Splits de string op de komma en pak het eerste deel
-                $firstToken = explode(',', $aiOutput)[0];
-
-                // Controleer of het eerste token "0" of "1" is
-                if (trim($firstToken) === '0') {
-                    return 0;
-                } elseif (trim($firstToken) === '1') {
-                    return 1;
-                }
+            // ✅ Extract text safely
+            if (isset($result['choices'][0]['text'])) {
+                $aiOutput = trim($result['choices'][0]['text']);
+                \Log::info("Extracted AI text: " . $aiOutput);
+                return $aiOutput;
             }
 
-            // Als geen van beide gevonden wordt, geef standaard 0 terug
-            return 0;
-
+            return null;
         } catch (\Exception $e) {
             \Log::error("AI evaluation failed: " . $e->getMessage());
             return null;
         }
     }
-    
+
     public function pullAIEvaluation()
     {
         // Haal de evaluatie uit de cache en verwijder deze

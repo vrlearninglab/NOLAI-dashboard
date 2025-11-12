@@ -994,3 +994,33 @@ input[type="number"] {
     background-color: #c06b54;
     transform: scale(1.1);
 }
+
+button {
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.3s;
+}
+
+/* The animated fill effect */
+button.filling::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background: rgba(255, 255, 0, 0.4);
+    transition: width 1s linear;
+    z-index: 0;
+}
+
+/* When the fill animation starts */
+button.filling::before {
+    width: 100%;
+}
+
+/* Ensure button text stays visible */
+button * {
+    position: relative;
+    z-index: 1;
+}

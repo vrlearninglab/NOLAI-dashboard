@@ -48,8 +48,10 @@ Route::post('/notes/{sessionId?}', [NoteController::class, 'store'])->name('note
 
 Route::post('/send-to-unity', function (Illuminate\Http\Request $request) {
     $message = $request->input('message', '');
+    $answerOptions = $request->input('answerOptions', []);
 
     Cache::put('unity_message', $message, now()->addSeconds(10));
+    Cache::put('LastAnswerButtons', $answerOptions, now()->addSeconds(30));
     return response()->json(['status' => 'ok']);
 });
 
