@@ -60,6 +60,22 @@ Route::get('/get-message', function () {
     return Cache::pull('unity_message', '');
 });
 
+// route om de fase en subfase in de cache te zetten
+Route::post('/update-current-element', function (Request $request) {
+    Cache::put('current_element_id', $request->input('element_id'), now()->addHour());
+    Cache::put('current_fase', $request->input('fase'), now()->addHour());
+    return response()->json(['status' => 'success']);
+});
+
+// route om de fase en subfase op te halen
+Route::get('/get-current-element', function () {
+    return response()->json([
+        'element_id' => Cache::get('current_element_id'),
+        'fase' => Cache::get('current_fase'),
+    ]);
+});
+
+
 Route::post('/store-data', [PlaceholderController::class, 'storeData']);
 Route::post('/store-image', [ImageController::class, 'store']);
 Route::post('/store-image-batch', [ImageController::class, 'storeBatch']);

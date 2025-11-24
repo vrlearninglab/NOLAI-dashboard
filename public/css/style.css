@@ -603,6 +603,7 @@ footer {
     margin: 5px 0; /* Optionele extra ruimte boven en onder de knoppen */
     padding: 12px 20px;
     font-size: 16px;
+    color: #fff;
     border: none;
     border-radius: 8px;
     cursor: pointer;
