@@ -64,8 +64,7 @@ class AudioController extends Controller
         $micFilename = uniqid() . '_mic.wav';
         $micPath = $micFile->storeAs('audio_files', $micFilename, 'public');
         $AskedQuestion = $request->input('AskedQuestion');
-
-
+        $AnswerOptions = $request->input('AnswerOptions', '');
 
         // Stuur het audiobestand naar Speaches voor transcriptie
         $transcription = $this->transcribeAudio($micPath);
@@ -78,16 +77,10 @@ class AudioController extends Controller
             ], 500);
         }
 
-
-        $KnownAnswerButtons = Cache::pull('LastAnswerButtons');
-        // Zorg dat KnownAnswerButtons altijd een string is
-        if (is_array($KnownAnswerButtons)) {
-            $KnownAnswerButtons = implode(', ', $KnownAnswerButtons);
-        }
-        \Log::info("Transcription wordt doorgestuurd naar AI met volgende waarde: $transcription, $AskedQuestion, $KnownAnswerButtons",);
+        \Log::info("Transcription wordt doorgestuurd naar AI met volgende waarde: $transcription, $AskedQuestion, $AnswerOptions",);
 
         // stuur de transcriptie naar ai voor een antwoord
-        $airesult = $this->evaluateAnswerWithAI($transcription, $AskedQuestion, $KnownAnswerButtons);
+        $airesult = $this->evaluateAnswerWithAI($transcription, $AskedQuestion, $AnswerOptions);
 
         #check of er een ai beoordeling is
         if ($airesult !== null) {
@@ -95,15 +88,6 @@ class AudioController extends Controller
             Cache::put('latest_ai_evaluation', [
                 'evaluation' => $airesult,
             ], now()->addMinutes(5));
-
-            Cache::put('LatestAIQuestion', $AskedQuestion, now()->addMinutes(5));
-            // zet een vlag dat er een nieuwe AI evaluatie is
-            //Cache::put('ai_evaluation_ready', true, now()->addMinutes(5));
-            return response()->json([
-                'success' => true,
-                'message' => 'Beoordeling succesvol.',
-                'evaluation' => $airesult,
-            ]);
         } else {
             return response()->json([
                 'success' => false,
@@ -202,12 +186,10 @@ class AudioController extends Controller
     {
         // Haal de evaluatie uit de cache en verwijder deze
         $evaluation = Cache::pull('latest_ai_evaluation');
-        $LastQuestion = Cache::pull('LatestAIQuestion');
 
         // Stuur de evaluatie en de bijbehorende vraag terug als JSON
         return response()->json([
             'evaluation' => $evaluation['evaluation'] ?? $evaluation ?? null,
-            'question' => $LastQuestion ?? null,
         ]);
     }
 }

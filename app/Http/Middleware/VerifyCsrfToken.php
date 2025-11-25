@@ -19,6 +19,7 @@ class VerifyCsrfToken extends Middleware
         '/upload-audio',
         '/upload-microphone-audio',
         'update-current-element',
+        '/clear-current-element',
         '/store-image-batch',
         '/update-stream',
         '/trigger-buttons',

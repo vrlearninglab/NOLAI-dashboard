@@ -48,10 +48,13 @@ Route::post('/notes/{sessionId?}', [NoteController::class, 'store'])->name('note
 
 Route::post('/send-to-unity', function (Illuminate\Http\Request $request) {
     $message = $request->input('message', '');
-    $answerOptions = $request->input('answerOptions', []);
+    //$answerOptions = $request->input('answerOptions', []);
 
     Cache::put('unity_message', $message, now()->addSeconds(10));
-    Cache::put('LastAnswerButtons', $answerOptions, now()->addSeconds(30));
+    //Cache::put('LastAnswerButtons', $answerOptions, now()->addSeconds(30));
+
+    \Log::info("Message saved to cache: ", [$message]);
+    //\Log::info("Answer options saved to cache: ", $answerOptions);
     return response()->json(['status' => 'ok']);
 });
 
@@ -64,6 +67,7 @@ Route::get('/get-message', function () {
 Route::post('/update-current-element', function (Request $request) {
     Cache::put('current_element_id', $request->input('element_id'), now()->addHour());
     Cache::put('current_fase', $request->input('fase'), now()->addHour());
+    //Cache::put('current_question', $request->input('question'), now()->addHour());
     return response()->json(['status' => 'success']);
 });
 
@@ -72,6 +76,7 @@ Route::get('/get-current-element', function () {
     return response()->json([
         'element_id' => Cache::get('current_element_id'),
         'fase' => Cache::get('current_fase'),
+        //'question' => Cache::get('current_question'),
     ]);
 });
 

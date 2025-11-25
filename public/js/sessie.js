@@ -2,7 +2,7 @@ var ActionButtonsContainer = document.getElementById("sessie-buttons-content");
 let timerInterval;
 let pollingInterval;
 let secondsElapsed = 0;
-let currentFase = 'Fase 1'; // Standaard startwaarde
+let currentFase = "Fase 1"; // Standaard startwaarde
 let currentElementId = 1;   // Standaard startwaarde
 
 // Stel het CSRF-token globaal in voor axios
@@ -10,12 +10,13 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 axios.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
 
 // Haal de huidige Fase en sub-fase op vanuit de backend
-async function fetchCurrentGroup() {
+async function fetchCurrentElement() {
     try {
         const response = await fetch("/get-current-element");
         const data = await response.json();
         if (data.element_id && data.fase !== undefined) {
             const newFase = `Fase ${data.fase}`;
+            //const newFase = data.fase;
             const newElementId = data.element_id;
             if (newFase !== currentFase || newElementId !== currentElementId) {
                 currentFase = newFase;
@@ -30,7 +31,7 @@ async function fetchCurrentGroup() {
 }
 
 // Poll elke 5 seconden voor updates van de huidige groep
-setInterval(fetchCurrentGroup, 5000);
+setInterval(fetchCurrentElement, 5000);
 
 // Functie om knoppen te maken en te updaten
 function CreateActionButtons() {
@@ -42,59 +43,104 @@ function CreateActionButtons() {
         })
         .then((responseData) => {
             console.log("Full response data:", responseData);
-            ActionButtonsContainer.innerHTML = ""; //clear container
+            ActionButtonsContainer.innerHTML = ""; // Clear container
 
-            // Controleer of responseData.data bestaat en een array is
             if (responseData.data && Array.isArray(responseData.data)) {
+                // Maak een container voor de huidige fase
+                let currentFaseContainer = document.createElement("section");
+                currentFaseContainer.classList.add("group-container");
+                currentFaseContainer.setAttribute("data-group", currentFase);
+                let currentFaseTitle = document.createElement("h3");
+                currentFaseTitle.textContent = currentFase;
+                currentFaseContainer.appendChild(currentFaseTitle);
+                ActionButtonsContainer.appendChild(currentFaseContainer);
+
+                // Maak een container voor de scenes
+                let scenesContainer = document.createElement("section");
+                scenesContainer.classList.add("group-container");
+                scenesContainer.setAttribute("data-group", "Scenes");
+                let scenesTitle = document.createElement("h3");
+                scenesTitle.textContent = "Activiteiten";
+                scenesContainer.appendChild(scenesTitle);
+                ActionButtonsContainer.appendChild(scenesContainer);
+
                 responseData.data.forEach((element) => {
                     if (element.text && element.group !== undefined) {
                         const elementFase = element.group;
-                        // Toon alleen knoppen voor de huidige fase
-                        if (elementFase !== currentFase) return;
 
-                        let groupContainer = document.querySelector(`.group-container[data-group="${elementFase}"]`);
-                        if (!groupContainer) {
-                            groupContainer = document.createElement("section");
-                            groupContainer.classList.add("group-container");
-                            groupContainer.setAttribute("data-group", elementFase);
-                            let groupTitle = document.createElement("h3");
-                            groupTitle.textContent = elementFase;
-                            groupContainer.appendChild(groupTitle);
-                            ActionButtonsContainer.appendChild(groupContainer);
+                        // Maak knoppen voor de huidige fase
+                        if (elementFase === currentFase) {
+                            let button = document.createElement("button");
+                            button.innerHTML = element.text;
+                            button.style.backgroundColor = `rgb(46, 52, 64)`;
+
+                            if (currentElementId && element.id == currentElementId) {
+                                button.style.backgroundColor = `rgba(62, 73, 97, 1)`;
+                                button.style.border = "2px solid white";
+                                button.style.color = "white";
+                            }
+
+                            let UnitySendObject = {
+                                data: [{
+                                    id: element.id,
+                                    text: element.text,
+                                    //question: element.Question || "",
+                                }],
+                            };
+
+                            // if (element.Question) {
+                            //     button.setAttribute("AskedQuestion", element.Question);
+                            // }
+
+                            button.onclick = () => {
+                                checkMessage(UnitySendObject);   //stuur de nieuwe sub-fase naar unity
+                                // Update de cache direct met de nieuwe elementId en fase
+                                fetch("/update-current-element", {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify({
+                                        element_id: element.id,
+                                        fase: currentFase.replace("Fase ", ""), // Converteer "Fase 1" naar 1
+                                    }),
+                                })
+                                .then((response) => response.json())
+                                .then((data) => {
+                                    console.log("Cache updated:", data);
+                                    currentFase = elementFase;
+                                    currentElementId = element.id;
+                                    console.log("Updated currentFase to:", currentFase, "currentElementId to:", currentElementId);
+                                    CreateActionButtons();
+                                })
+                                .catch((error) => {
+                                    console.error("Error updating cache:", error);
+                                });
+                            };
+
+                            currentFaseContainer.appendChild(button);
                         }
 
-                        let button = document.createElement("button");
-                        button.innerHTML = element.text;
-                        button.style.backgroundColor = `rgb(46, 52, 64)`;
+                        // Maak knoppen voor de scenes
+                        else if (elementFase === "Scenes") {
+                            let button = document.createElement("button");
+                            button.innerHTML = element.text;
+                            button.style.backgroundColor = `rgba(122, 122, 122, 1)`;
+                            button.style.color = 'white';
 
-                        // Markeer actieve knop
-                        if (currentElementId && element.id == currentElementId) {
-                            button.style.backgroundColor = `rgba(62, 73, 97, 1)`;
-                            button.style.border = "2px solid white";
-                            
+                            let UnitySendObject = {
+                                data: [{
+                                    id: element.id,
+                                    text: element.text,
+                                }],
+                            };
+
+                            button.onclick = () => {
+                                checkMessage(UnitySendObject);
+                            };
+
+                            scenesContainer.appendChild(button);
                         }
-
-                        let UnitySendObject = {
-                            data: [{
-                                id: element.id,
-                                text: element.text,
-                                question: element.Question || "",
-                            }],
-                        };
-
-                        if (element.Question) {
-                            button.setAttribute("AskedQuestion", element.Question);
-                        }
-
-                        button.onclick = () => {
-                            checkMessage(UnitySendObject);
-                            currentFase = elementFase;
-                            currentElementId = element.id;
-                            console.log("Updated currentFase to:", currentFase, "currentElementId to:", currentElementId);
-                            CreateActionButtons();
-                        };
-
-                        groupContainer.appendChild(button);
                     }
                 });
             } else {
@@ -106,14 +152,14 @@ function CreateActionButtons() {
         });
 }
 
-// Check of een bericht een scene switch is
+//checkt of de knop een sceneswitch is
 function checkMessage(message) {
     const sceneSwitchMessages = [
-        "Scene (A0_onboarding)",
-        "Scene (A1_Markt)",
-        "Scene (A2_Schipgereedmaken)",
-        "Scene (A3_Varen)",
-        "Scene (A4_Eiland)"
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
     ];
     let messageText = message.data[0].text;
     console.log(message);
@@ -131,51 +177,37 @@ function checkMessage(message) {
 }
 
 // Stuur data naar Unity
+let lastSentMessageId = null;
+// Stuur welke knop er geklikt is naar unity
 async function sendToUnity(message) {
-    const buttons = document.querySelectorAll("button");
-    console.log("message: ", message);
-    if (!message.data || !message.data.length) {
+     if (!message.data || !message.data.length) {
         console.warn("No data in message");
         return;
     }
-    const questionText = message.data[0].question;
-    const questionButton = Array.from(buttons).find(
-        (btn) => btn.getAttribute("AskedQuestion") === questionText
-    );
-    console.log("Question Button: ", questionButton);
-    let AllAnswerOptions = [];
-    if (questionButton) {
-        const OriginalButtonText = questionButton.textContent.trim();
-        const match = OriginalButtonText.match(/^(\d+)\)/);
-        const number = match ? match[1] : null;
-        if (number) {
-            const regex = new RegExp(`^${number}[a-z]?\\)`);
-            AllAnswerOptions = Array.from(buttons)
-                .filter((b) => {
-                    const text = b.textContent.trim();
-                    return regex.test(text) && text !== OriginalButtonText;
-                })
-                .map((b) => b.innerHTML.trim());
-            console.log("AllAnswerOptions:", AllAnswerOptions);
-        }
-    } else {
-        console.warn("No button found for question:", questionText);
+
+    const messageId = message.data[0].id;
+    if (messageId === lastSentMessageId) {
+        console.log("Message already sent, skipping...");
+        return;
     }
+
     try {
         const response = await fetch("/send-to-unity", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 message: message,
-                answerOptions: AllAnswerOptions,
             }),
         });
+
         const data = await response.json();
         console.log("Response from Unity:", data);
+        lastSentMessageId = messageId;
     } catch (error) {
-        console.error("Fout bij het versturen van data:", error);
+        console.error("Error sending data:", error);
     }
 }
+
 
 // Open popup
 function openPopup() {
@@ -305,7 +337,7 @@ function pollForAIEvaluation() {
         .then((response) => response.json())
         .then((data) => {
             if (data && data.evaluation != null) {
-                handleAIEvaluation(data.evaluation, data.question);
+                handleAIEvaluation(data.evaluation);
             }
         })
         .catch((error) => {
@@ -317,13 +349,9 @@ function pollForAIEvaluation() {
 setInterval(pollForAIEvaluation, 1000);
 
 // Functie om de AI-evaluatie te verwerken
-function handleAIEvaluation(evaluation, OriginalQuestion) {
+function handleAIEvaluation(evaluation) {
     console.log("AI Evaluation:", evaluation);
-    console.log("Original Question:", OriginalQuestion);
     const buttons = document.querySelectorAll("button");
-    const questionButton = Array.from(buttons).find(
-        (btn) => btn.getAttribute("AskedQuestion") === OriginalQuestion
-    );
     const evaluatedButton = Array.from(buttons).find((btn) => {
         return btn.textContent.trim().toLowerCase() === evaluation.trim().toLowerCase();
     });
@@ -342,7 +370,7 @@ function selectAndTriggerButton(button) {
         return;
     }
     console.log("Selecting button:", button);
-    button.style.outline = "3px solid white";
+    button.style.outline = "3px solid blue";
     setTimeout(() => {
         console.log("Triggering button:", button);
         try {
@@ -354,9 +382,7 @@ function selectAndTriggerButton(button) {
         } catch (e) {
             console.error("Error triggering button click:", e);
         }
-        button.style.outline = "none";
-        button.style.backgroundColor = "rgba(129, 129, 129, 0.3)";
-    }, 1000);
+    }, 2000);
 }
 
 // Start de knoppen direct bij het laden van de pagina
