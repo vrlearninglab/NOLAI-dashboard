@@ -187,7 +187,7 @@ class AudioController extends Controller
         // Haal de evaluatie uit de cache en verwijder deze
         $evaluation = Cache::pull('latest_ai_evaluation');
 
-        // Stuur de evaluatie en de bijbehorende vraag terug als JSON
+        // Stuur de evaluatie terug
         return response()->json([
             'evaluation' => $evaluation['evaluation'] ?? $evaluation ?? null,
         ]);

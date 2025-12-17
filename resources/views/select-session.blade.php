@@ -14,7 +14,7 @@
             <img src="{{ asset('img/icon_return.png') }}" alt="Terug" width="40" height="40">
             <span>Terug</span>
         </a>
-        <h1>VR-woordenschat dashboard</h1>
+        <h1>Dashboard 'Woordenschat met VR en AI'</h1>
     </header>
     <h1>Selecteer een sessie</h1>
 

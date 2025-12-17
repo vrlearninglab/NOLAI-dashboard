@@ -8,7 +8,7 @@
 </head>
 <body>
     <header>
-        <h1>VR-woordenschat dashboard</h1>
+        <h1>Dashboard 'Woordenschat met VR en AI'</h1>
     </header>
 
     <section class="user-input">

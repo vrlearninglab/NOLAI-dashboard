@@ -16,12 +16,12 @@
             <img src="{{ asset('img/icon_return.png') }}" alt="Terug" width="40" height="40">
             <span>Terug</span>
         </a>
-        <h1>VR-woordenschat dashboard</h1>
+        <h1>Dashboard 'Woordenschat met VR en AI'</h1>
         <button onclick="openPopup()" class="stop-stream">Sessie beëindigen</button>
     </header>
 
     <article class="sessie-info">
-        <h1>Sessie dashboard</h1>
+        <!-- <h1>Sessie dashboard</h1> -->
         <section class="sessie-details">
             @if ($session)
                 <p>Datum: {{ $session->created_at }}</p>
@@ -35,8 +35,8 @@
 
     <article class="sessie-controls">
         <section class="sessie-buttons">
-            <h2>VR-besturing</h2>
-            <button onclick="CreateActionButtons()" style="width:min-content;">⟳</button>
+            <h2>Controle spelverloop</h2>
+            <button class="refresh-button" onclick="CreateActionButtons()">Ververs</button>
             <section id="sessie-buttons-content">
                 <h3>Unity Acties</h3>
                 <p>❌ Er zijn momenteel geen acties gedefineert. Ververs de actie knoppen</p>
@@ -44,7 +44,7 @@
         </section>
 
         <section class="livestream">
-            <h2>Live Unity Stream</h2>
+            <h2>Live stream VR</h2>
             <div>
                 <!-- Dit moet automatisch runnen op het momement dat de stream url bestaat -->
                 @if ($streamURL)
@@ -60,7 +60,7 @@
         </section>
 
         <section class="sessie-notes">
-            <h1>Notes</h1>
+            <h1>Notities</h1>
             <br>
             <ul id="notesList">
                 <!-- notities komen hier -->

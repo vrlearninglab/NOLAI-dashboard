@@ -567,14 +567,45 @@ footer {
     min-height: 90%; /* Minimaal hoogte voor buttons-sectie */
     max-height: 90%;
     overflow-y: auto;
+    overflow-x: hidden;
     background-color: var(--secondary);
     padding: 15px;
-    border-radius: 12px;
+    border-radius: 12px; 
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     gap: 20px; /* Ruimte tussen secties */
 }
+
+/* Stijl voor de "ververs"-knop */
+.sessie-buttons .refresh-button {
+    margin-top: 2px;
+    overflow-x: hidden;
+    background-color: #89536d;
+    color: white;
+    border-radius: 4px; /* evemtueel vorder-radius weghaen */
+    padding: 10px; /* Verklein de padding */
+    font-size: 15px;
+    cursor: pointer;
+    
+}
+
+/* Optioneel: Hover effect */
+.sessie-buttons .refresh-button:hover {
+    background-color: #764a77;
+}
+
+.scene-button {
+    background-color: #D08770;
+    color: #4c566a;
+    font-size: 15px;
+    margin: 5px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
 
 /* Titel van de sessie-buttons */
 .sessie-buttons h2 {
@@ -595,20 +626,26 @@ footer {
 .sessie-buttons-content {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 2px;
 }
 
-/* Knoppen binnen de sessie-buttons sectie */
-.sessie-buttons button {
-    margin: 5px 0; /* Optionele extra ruimte boven en onder de knoppen */
-    padding: 12px 20px;
+.sessie-buttons button.sessie-button {
+    margin: 5px 3px;
+    padding: 10px 10px;
     font-size: 16px;
-    color: #6f798d;
+    color: #4c566a;
+    background-color: var(--primary);
     border: none;
-    border-radius: 8px;
+    border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s ease-in-out;
 }
+
+.sessie-buttons button.sessie-button:hover {
+    background-color: #3e4961;
+    color: var(--text-light);
+}
+
 
 /* Scrollbare sectie voor knoppen */
 .sessie-buttons-content {
@@ -799,6 +836,7 @@ tbody tr:hover {
     font-size: 16px;
     cursor: pointer;
     width: 100%;
+    background-color: #89536d;
     transition: background-color 0.3s, transform 0.2s ease-in-out;
 }
 
