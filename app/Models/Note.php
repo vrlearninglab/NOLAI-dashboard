@@ -9,5 +9,5 @@ class Note extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['message', 'session_id'];
+    protected $fillable = ['sender', 'message' , 'session_id'];
 }

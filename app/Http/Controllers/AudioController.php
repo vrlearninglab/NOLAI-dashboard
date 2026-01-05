@@ -7,12 +7,27 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Audio;
 use App\Models\Session;
+use App\Models\Note;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
 class AudioController extends Controller
 {
+    private function addLogToNote($sender, $message)
+    {
+        $latestSession = Session::latest()->first();
+        if (!$latestSession) {
+            \Log::warning('Geen actieve sessie gevonden voor notitie: ' . $message);
+            return;
+        }
+
+        Note::create([
+            'sender' => $sender,
+            'message' => $message,
+            'session_id' => $latestSession->id,
+        ]);
+    }
     public function uploadIngameAudio(Request $request)
     {
         \Log::info('Inkomende ingame audio request:', [
@@ -60,7 +75,7 @@ class AudioController extends Controller
         if (!$latestSession) {
             return response()->json(['error' => 'Geen actieve sessie gevonden.'], 404);
         }
-        
+
         //check of er een audio bestand is verstuurd
         if (!$request->hasFile('microphone_audio') || !$request->file('microphone_audio')->isValid()) {
             return response()->json([
@@ -97,6 +112,15 @@ class AudioController extends Controller
                 'error' => 'Fout bij het transcriberen van het audiobestand.',
             ], 500);
         }
+
+        // Haal de laatste sessie op
+        $latestSession = Session::latest()->first();
+        if (!$latestSession) {
+            return response()->json(['error' => 'Geen actieve sessie gevonden.'], 404);
+        }
+
+        // Voeg transcriptie toe aan notities
+        $this->addLogToNote("Transcriptie", $transcription);
 
         \Log::info("Transcription wordt doorgestuurd naar AI met volgende waarde: $transcription, $AskedQuestion, $AnswerOptions");
 
@@ -193,6 +217,8 @@ class AudioController extends Controller
             if (isset($result['choices'][0]['text'])) {
                 $aiOutput = trim($result['choices'][0]['text']);
                 \Log::info("Extracted AI text: " . $aiOutput);
+                // Voeg transcriptie toe aan notities
+                $this->addLogToNote("AI koos ", $aiOutput);
                 return $aiOutput;
             }
 

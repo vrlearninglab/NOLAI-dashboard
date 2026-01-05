@@ -1,6 +1,10 @@
-document.addEventListener("DOMContentLoaded", fetchNotes);
+document.addEventListener("DOMContentLoaded", () => {
+    fetchNotes();
+    setInterval(fetchNotes, 2000); // Check every 2 seconds
+});
 
 function fetchNotes() {
+    console.log("Notities ophalen...");
     let sessionId = window.sessionId || null; // Haal de sessie-ID op uit de globale variabele
 
     let url = sessionId ? `/notes/${sessionId}` : "/notes"; // Dynamische URL
@@ -13,7 +17,11 @@ function fetchNotes() {
             // Voeg alle notities toe aan de lijst
             response.data.forEach(note => {
                 let li = document.createElement("li");
-                li.textContent = `${note.created_at}: ${note.message}`; // Voeg timestamp toe
+                li.innerHTML = `<b> ${note.sender} </b> - ${note.created_at} <br> `;
+                let messageSpan = document.createElement("span");
+                messageSpan.textContent = note.message;
+                li.appendChild(messageSpan);
+
                 notesList.appendChild(li);
             });
 
@@ -32,8 +40,11 @@ function addNote() {
     let sessionId = window.sessionId || null; // Sessie-ID ophalen
     let url = sessionId ? `/notes/${sessionId}` : "/notes"; // Dynamische URL
 
-    axios.post(url, { message })
-        .then(response => {
+    axios.post(url, { 
+        message,
+        sender: 'Gebruiker'
+    })
+        .then(() => {
             noteInput.value = ""; // Leeg inputveld
             fetchNotes(); // Lijst vernieuwen
         })

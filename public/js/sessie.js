@@ -195,6 +195,9 @@ function checkMessage(message) {
     let messageText = message.data[0].text;
     console.log(message);
 
+    // Log de geklikte knop naar de notities
+    addButtonToNotes(messageText);
+
     // Als het een scene is, update de actieve scene
     if (sceneSwitchMessages.includes(messageText)) {
         currentActivity = messageText;
@@ -255,12 +258,30 @@ async function sendToUnity(message) {
             }),
         });
         console.log("heb het verzonden to unity: ", message);
+        //Add note to notblock
         const data = await response.json();
         console.log("Response from Unity:", data);
         lastSentMessageId = messageId;
     } catch (error) {
         console.error("Error sending data:", error);
     }
+}
+
+// Voeg geklikte knop toe aan notities
+function addButtonToNotes(buttonText) {
+    let sessionId = window.sessionId || null;
+    let url = sessionId ? `/notes/${sessionId}` : "/notes";
+
+    axios.post(url, {
+        message: buttonText,
+        sender: 'Knop geactiveerd:'
+    })
+    .then(response => {
+        console.log("Knop toegevoegd aan notities:", buttonText);
+    })
+    .catch(error => {
+        console.error("Fout bij toevoegen knop aan notities:", error);
+    });
 }
 
 

@@ -28,6 +28,7 @@ class NoteController extends Controller
                     ->get()
                     ->map(function ($note) {
                         return [
+                            'sender' => $note->sender,
                             'message' => $note->message,
                             'created_at' => Carbon::parse($note->created_at)->format('Y-m-d H:i:s')
                         ];
@@ -51,9 +52,11 @@ class NoteController extends Controller
 
         $request->validate([
             'message' => 'required|string',
+            'sender' => 'nullable|string',
         ]);
 
         $note = Note::create([
+            'sender' => $request->sender ?? 'Gebruiker',
             'message' => $request->message,
             'session_id' => $session->id,
         ]);
