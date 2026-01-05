@@ -218,7 +218,24 @@ function checkMessage(message) {
 let lastSentMessageId = null;
 // Stuur welke knop er geklikt is naar unity
 async function sendToUnity(message) {
-     if (!message.data || !message.data.length) {
+    // Als het bericht een string is en gelijk is aan "Start stream" of "Stop stream", verstuur het direct
+    if (message === "Start stream" || message === "Stop stream") {
+        try {
+            const response = await fetch("/send-to-unity", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: message }),
+            });
+            console.log("Verzonden naar Unity (string):", message);
+            const data = await response.json();
+            console.log("Response from Unity:", data);
+        } catch (error) {
+            console.error("Error sending data:", error);
+        }
+        return; // Stop verdere uitvoering voor deze uitzondering
+    }
+    
+    if (!message.data || !message.data.length) {
         console.warn("No data in message");
         return;
     }
@@ -237,7 +254,7 @@ async function sendToUnity(message) {
                 message: message,
             }),
         });
-
+        console.log("heb het verzonden to unity: ", message);
         const data = await response.json();
         console.log("Response from Unity:", data);
         lastSentMessageId = messageId;

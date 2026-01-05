@@ -16,7 +16,7 @@ class VerifyCsrfToken extends Middleware
         '/get-message',
         '/store-data',
         '/store-image',
-        '/upload-audio',
+        '/upload-ingame-audio',
         '/upload-microphone-audio',
         'update-current-element',
         '/clear-current-element',

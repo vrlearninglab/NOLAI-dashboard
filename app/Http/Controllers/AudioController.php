@@ -13,41 +13,54 @@ use GuzzleHttp\Exception\RequestException;
 
 class AudioController extends Controller
 {
-    public function uploadAudio(Request $request)
+    public function uploadIngameAudio(Request $request)
     {
-        // Haal de laatst aangemaakte sessie op (op basis van de timestamp)
+        \Log::info('Inkomende ingame audio request:', [
+            'hasFile' => $request->hasFile('ingame_audio'),
+            'isValid' => $request->hasFile('ingame_audio') ? $request->file('ingame_audio')->isValid() : 'N/A',
+            'file' => $request->file('ingame_audio'),
+        ]);
+
+        // Haal de laatste sessie op
         $latestSession = Session::latest()->first();
         if (!$latestSession) {
             return response()->json(['error' => 'Geen actieve sessie gevonden.'], 404);
         }
 
-        if ($request->hasFile('ingame_audio') && $request->file('ingame_audio')->isValid()) {
-            $gameFile = $request->file('ingame_audio');
-            $gameFilename = uniqid() . '_game.wav';
-            $gamePath = $gameFile->storeAs('audio_files', $gameFilename, 'public');
-            Audio::create([
-                'file_path' => $gamePath,
-                'audio_type' => 'ingame',
-                'session_id' => $latestSession->id, // Koppel de image aan de laatste sessie
-            ]);
+        // Check of er een audiobestand is verstuurd
+        if (!$request->hasFile('ingame_audio') || !$request->file('ingame_audio')->isValid()) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Ongeldig audiobestand.',
+            ], 400);
         }
 
-        if ($request->hasFile('microphone_audio') && $request->file('microphone_audio')->isValid()) {
-            $micFile = $request->file('microphone_audio');
-            $micFilename = uniqid() . '_mic.wav';
-            $micPath = $micFile->storeAs('audio_files', $micFilename, 'public');
-            Audio::create([
-                'file_path' => $micPath,
-                'audio_type' => 'microphone',
-                'session_id' => $latestSession->id, // Koppel de image aan de laatste sessie
-            ]);
-        }
+        \Log::info("er is een ingame audio bestand");
+        // Sla ingame audio op
+        $gameFile = $request->file('ingame_audio');
+        $gameFilename = uniqid() . '_game.wav';
+        $gamePath = $gameFile->storeAs('audio_files', $gameFilename, 'public');
 
-        return response()->json(['message' => 'Bestanden succesvol geüpload!']);
+        // Sla het bestand op in de database
+        Audio::create([
+            'file_path' => $gamePath,
+            'audio_type' => 'ingame',
+            'session_id' => $latestSession->id,
+        ]);
+
+        return response()->json(['message' => 'Ingame audio succesvol geüpload!']);
     }
+
+
 
     public function uploadMicrophoneAudio(Request $request)
     {
+        // Haal de laatste sessie op
+        $latestSession = Session::latest()->first();
+        if (!$latestSession) {
+            return response()->json(['error' => 'Geen actieve sessie gevonden.'], 404);
+        }
+        
         //check of er een audio bestand is verstuurd
         if (!$request->hasFile('microphone_audio') || !$request->file('microphone_audio')->isValid()) {
             return response()->json([
@@ -63,6 +76,14 @@ class AudioController extends Controller
         $micFile = $request->file('microphone_audio');
         $micFilename = uniqid() . '_mic.wav';
         $micPath = $micFile->storeAs('audio_files', $micFilename, 'public');
+
+        // Sla het bestand op in de database
+        Audio::create([
+            'file_path' => $micPath,
+            'audio_type' => 'microphone',
+            'session_id' => $latestSession->id,
+        ]);
+
         $AskedQuestion = $request->input('AskedQuestion');
         $AnswerOptions = $request->input('AnswerOptions', '');
 
@@ -77,7 +98,7 @@ class AudioController extends Controller
             ], 500);
         }
 
-        \Log::info("Transcription wordt doorgestuurd naar AI met volgende waarde: $transcription, $AskedQuestion, $AnswerOptions",);
+        \Log::info("Transcription wordt doorgestuurd naar AI met volgende waarde: $transcription, $AskedQuestion, $AnswerOptions");
 
         // stuur de transcriptie naar ai voor een antwoord
         $airesult = $this->evaluateAnswerWithAI($transcription, $AskedQuestion, $AnswerOptions);

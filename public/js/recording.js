@@ -23,42 +23,75 @@ async function fetchImages(sessionId) {
     }
 }
 
+// async function fetchAudio(sessionId) {
+//     try {
+//         const response = await fetch(`/get-audio/${sessionId}`);
+//         const audioFiles = await response.json();
+
+//         console.log("session id: ", sessionId);
+//         console.log("response json: ", response );
+//         console.log("audio bestanden: ", audioFiles);
+//         if (audioFiles.length < 2) {
+//             console.error("Niet genoeg audiobestanden gevonden.");
+//             return;
+//         }
+
+//         audio1 = new Audio(`/storage/${audioFiles[0]}`);
+//         audio2 = new Audio(`/storage/${audioFiles[1]}`);
+
+//         await Promise.all([
+//             new Promise(resolve => audio1.addEventListener('canplaythrough', resolve, { once: true })),
+//             new Promise(resolve => audio2.addEventListener('canplaythrough', resolve, { once: true }))
+//         ]);
+//     } catch (error) {
+//         console.error('Fout bij het ophalen van de audiobestanden:', error);
+//     }
+// }
+
 async function fetchAudio(sessionId) {
     try {
         const response = await fetch(`/get-audio/${sessionId}`);
         const audioFiles = await response.json();
 
-        if (audioFiles.length < 2) {
-            console.error("Niet genoeg audiobestanden gevonden.");
+        console.log("Audio bestanden:", audioFiles);
+
+        if (audioFiles.length === 0) {
+            console.error("Geen in-game audiobestanden gevonden.");
             return;
         }
 
         audio1 = new Audio(`/storage/${audioFiles[0]}`);
-        audio2 = new Audio(`/storage/${audioFiles[1]}`);
+        await new Promise(resolve => audio1.addEventListener('canplaythrough', resolve, { once: true }));
 
-        await Promise.all([
-            new Promise(resolve => audio1.addEventListener('canplaythrough', resolve, { once: true })),
-            new Promise(resolve => audio2.addEventListener('canplaythrough', resolve, { once: true }))
-        ]);
     } catch (error) {
         console.error('Fout bij het ophalen van de audiobestanden:', error);
     }
 }
 
+
 async function startPlayback() {
     const sessionId = getSessionId();
     await fetchImages(sessionId);
+    console.log("images: ",images );
     await fetchAudio(sessionId);
 
     index = 0;
     paused = false;
     clearInterval(playbackInterval);
 
-    audio1.currentTime = 0;
-    audio2.currentTime = 0;
+    // audio1.currentTime = 0;
+    // audio1.play();
 
-    audio1.play();
-    audio2.play();
+    //audio2.currentTime = 0;
+    //audio2.play();
+
+    //speel audio 1 versneld af
+    // Stel de afspeelsnelheid in op 2x
+    if (audio1) {
+        audio1.playbackRate = 2.0;
+        audio1.currentTime = 0;
+        audio1.play();
+    }
 
     setStreamButtons();
 
@@ -116,6 +149,7 @@ function resumePlayback() {
     if (!paused) return;
 
     if (audio1) {
+        audio1.playbackRate = 1.0; // Zorg dat de snelheid behouden blijft
         audio1.currentTime = audio1PausedAt;
         audio1.play();
     }
