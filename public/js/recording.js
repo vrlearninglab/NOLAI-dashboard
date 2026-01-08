@@ -88,7 +88,7 @@ async function startPlayback() {
     //speel audio 1 versneld af
     // Stel de afspeelsnelheid in op 2x
     if (audio1) {
-        audio1.playbackRate = 2.0;
+        //audio1.playbackRate = 2.0;
         audio1.currentTime = 0;
         audio1.play();
     }
@@ -149,7 +149,7 @@ function resumePlayback() {
     if (!paused) return;
 
     if (audio1) {
-        audio1.playbackRate = 1.0; // Zorg dat de snelheid behouden blijft
+        //audio1.playbackRate = 1.0; // Zorg dat de snelheid behouden blijft
         audio1.currentTime = audio1PausedAt;
         audio1.play();
     }

@@ -51,12 +51,19 @@ class SessionController extends Controller
     // Toon de details van een specifieke sessie
     public function show($id)
     {
-        $session = Session::with(['user', 'student'])->find($id);
+        $session = Session::with(['user', 'student', 'timer'])->find($id);
 
         if (!$session) {
             return redirect()->route('select-session')->with('error', 'Sessie niet gevonden.');
         }
 
+        // Controleer of de timer ontbreekt
+        if (!$session->timer) {
+            return view('errors.session-not-saved');
+        }
+
+        // Als alles oké is, toon de normale view
         return view('sessie-analyse', compact('session'));
     }
+
 }
