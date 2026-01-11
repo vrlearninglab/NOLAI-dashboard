@@ -19,7 +19,7 @@
         <h1>Sessie niet opgeslagen</h1>
         <p>
             Er is een sessie gestart, maar deze is niet beeindigt met de "sessie beeindigen" knop.
-            Hierdoor zijn de timer en andere gegevens niet gekoppeld aan de sessie.
+            Hierdoor zijn de timer en andere gegevens niet opgeslagen en gekoppeld aan de sessie.
         </p>
         <p>
             Ga terug en probeer het opnieuw, of start een nieuwe sessie.

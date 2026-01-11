@@ -89,15 +89,25 @@ Route::get('/recording', [ImageController::class, 'showRecording']);
 Route::get('/get-images/{sessionId}', [ImageController::class, 'getImages']);
 
 // Route::get('/get-audio/{sessionId}', function ($sessionId) {
-//     $audios = Audio::where('session_id', $sessionId)->pluck('file_path'); 
+//     $audios = Audio::where('session_id', $sessionId)->pluck('file_path', 'audio_type'); 
 //     return response()->json($audios);
 // });
+
 Route::get('/get-audio/{sessionId}', function ($sessionId) {
     $audios = Audio::where('session_id', $sessionId)
-                   ->where('audio_type', 'ingame')
-                   ->pluck('file_path');
+        ->select('file_path', 'audio_type')
+        ->get();
+
     return response()->json($audios);
 });
+
+
+// Route::get('/get-audio/{sessionId}', function ($sessionId) {
+//     $audios = Audio::where('session_id', $sessionId)
+//                    ->where('audio_type', 'ingame')
+//                    ->pluck('file_path');
+//     return response()->json($audios);
+// });
 
 Route::post('/upload-ingame-audio', [AudioController::class, 'uploadIngameAudio']); // ingame audio die constant gestreamed word
 Route::post('/upload-microphone-audio', [AudioController::class, 'uploadMicrophoneAudio']);  // audio die incidenteel wordt verzonden van microfoon
@@ -122,6 +132,7 @@ Route::get('/get-unity-status', function () {
     $status = Cache::get('unity_status', 'Geen data opgeslagen');
     return response()->json(['message' => $status]);
 });
+
 
 
 Route::get('/laravel', function () {

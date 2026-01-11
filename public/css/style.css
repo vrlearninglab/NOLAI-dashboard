@@ -36,6 +36,11 @@ body {
     text-align: center;
 }
 
+.audio-section {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+}
+
 h1 {
     color: var(--text-light);
 }

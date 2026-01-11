@@ -67,6 +67,13 @@
         </section>
     </article>
 
+    <article class="audio-section">
+        <div id="microphone-audio-container" class="audio-grid">
+            <!-- Audio buttons komen hier -->
+        </div>
+    </article>
+
+
     <footer>
     </footer>
 

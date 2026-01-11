@@ -23,50 +23,82 @@ async function fetchImages(sessionId) {
     }
 }
 
+async function fetchAudio(sessionId) {
+    try {
+        const response = await fetch(`/get-audio/${sessionId}`);
+        const audioFiles = await response.json();
+        //const audioFiles = (await response.json()).data;
+
+
+        console.log("Audio bestanden:", audioFiles);
+
+        if (audioFiles.length === 0) {
+            console.error("Geen audiobestanden gevonden.");
+            return;
+        }
+
+        //scheid ingame en microfoon audio
+        const ingameAudio = audioFiles.find(file => file.audio_type === 'ingame');
+        const microphoneAudios = audioFiles.filter(file => file.audio_type === 'microphone');
+
+
+
+        if (ingameAudio){
+            audio1 = new Audio(`/storage/${ingameAudio.file_path}`);
+            await new Promise(resolve => audio1.addEventListener('canplaythrough', resolve, { once: true }));
+        }
+
+        console.log("microphone audio: ", microphoneAudios);
+
+        const microphoneContainer = document.getElementById('microphone-audio-container');
+        microphoneContainer.innerHTML = '<h3>Microfoon opnames:</h3>';
+
+        // één rij-container
+        const row = document.createElement('div');
+        row.style.display = 'flex';
+        row.style.gap = '10px';
+        row.style.flexWrap = 'wrap';
+
+        microphoneAudios.forEach((audio, index) => {
+            const audioElement = new Audio(`/storage/${audio.file_path}`);
+
+            const button = document.createElement('button');
+            button.textContent = `🎤 Opname ${index + 1}`;
+            button.onclick = () => {
+                audioElement.currentTime = 0;
+                audioElement.play();
+            };
+
+            row.appendChild(button);
+        });
+
+        microphoneContainer.appendChild(row);
+
+        
+    } catch (error) {
+        console.error('Fout bij het ophalen van de audiobestanden:', error);
+    }
+}
+
 // async function fetchAudio(sessionId) {
 //     try {
 //         const response = await fetch(`/get-audio/${sessionId}`);
 //         const audioFiles = await response.json();
 
-//         console.log("session id: ", sessionId);
-//         console.log("response json: ", response );
-//         console.log("audio bestanden: ", audioFiles);
-//         if (audioFiles.length < 2) {
-//             console.error("Niet genoeg audiobestanden gevonden.");
+//         console.log("Audio bestanden:", audioFiles);
+
+//         if (audioFiles.length === 0) {
+//             console.error("Geen in-game audiobestanden gevonden.");
 //             return;
 //         }
 
 //         audio1 = new Audio(`/storage/${audioFiles[0]}`);
-//         audio2 = new Audio(`/storage/${audioFiles[1]}`);
+//         await new Promise(resolve => audio1.addEventListener('canplaythrough', resolve, { once: true }));
 
-//         await Promise.all([
-//             new Promise(resolve => audio1.addEventListener('canplaythrough', resolve, { once: true })),
-//             new Promise(resolve => audio2.addEventListener('canplaythrough', resolve, { once: true }))
-//         ]);
 //     } catch (error) {
 //         console.error('Fout bij het ophalen van de audiobestanden:', error);
 //     }
 // }
-
-async function fetchAudio(sessionId) {
-    try {
-        const response = await fetch(`/get-audio/${sessionId}`);
-        const audioFiles = await response.json();
-
-        console.log("Audio bestanden:", audioFiles);
-
-        if (audioFiles.length === 0) {
-            console.error("Geen in-game audiobestanden gevonden.");
-            return;
-        }
-
-        audio1 = new Audio(`/storage/${audioFiles[0]}`);
-        await new Promise(resolve => audio1.addEventListener('canplaythrough', resolve, { once: true }));
-
-    } catch (error) {
-        console.error('Fout bij het ophalen van de audiobestanden:', error);
-    }
-}
 
 
 async function startPlayback() {
