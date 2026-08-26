@@ -49,6 +49,11 @@ In the Unity project, open the `Dashboard Connector` component in the scene view
 
 Research prototype, developed alongside the Unity client as part of the NOLAI project. Development and data collection have concluded; this repository is published as-is for reference and reproducibility.
 
+## Partner
+
+The project was funded by NOLAI and build in collaboration with Radboud University
+
+
 ## License
 
 Apache License 2.0 — see [LICENSE](LICENSE) for details.
